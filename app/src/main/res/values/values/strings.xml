@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Acedrop Seller</string>
+    <string name="app_name">AceDrops</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="password">Password</string>
@@ -32,7 +32,7 @@
     <string name="profile">Profile</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="acedrop_seller">Acedrop Seller</string>
+    <string name="acedrop">Acedrop</string>
     <string name="server_client_id">268564059113-4tes04r0sej5c1e1ukpmgv3o8em0n805.apps.googleusercontent.com</string>
 
 </resources>

@@ -11,5 +11,5 @@ data class UserData(
     val message: String? = null,
     val newpass: String? = null,
     val status:Int?=null,
-    val id:String?=null
+    val id:Int?=null
 )

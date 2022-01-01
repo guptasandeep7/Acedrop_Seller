@@ -1,8 +1,6 @@
 package com.example.acedropseller.network
 
-import com.example.acedropseller.model.Message
-import com.example.acedropseller.model.Token
-import com.example.acedropseller.model.UserData
+import com.example.acedropseller.model.*
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Field
@@ -35,5 +33,8 @@ interface ApiInterface {
 
     @POST("/auth/signupGoogle")
     fun gSignUp(@Body token: Token): Call<UserData>
+
+    @POST("/shop/createShop")
+    fun createShop(@Body details: ShopDetails): Call<Message>
 
 }

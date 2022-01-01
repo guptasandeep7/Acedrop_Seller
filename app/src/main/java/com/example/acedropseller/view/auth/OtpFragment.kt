@@ -108,8 +108,8 @@ class OtpFragment : Fragment(), View.OnClickListener {
                             ),
                             requireContext()
                         )
+                        findNavController().navigate(R.id.action_otpFragment_to_businessDetailsFragment)
                         activity?.finish()
-                        findNavController().navigate(R.id.action_otpFragment_to_bussinessDetailsFragment)
                     }
                 })
             }

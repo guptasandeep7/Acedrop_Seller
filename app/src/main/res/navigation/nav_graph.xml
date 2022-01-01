@@ -117,7 +117,7 @@
     </fragment>
     <fragment
         android:id="@+id/personalDetails"
-        android:name="com.example.acedropseller.view.auth.PersonalDetails"
+        android:name="com.example.acedropseller.view.auth.PersonalDetailsFragment"
         android:label="PersonalDetails"
         tools:layout="@layout/fragment_personal_details">
         <action
@@ -135,7 +135,7 @@
     </fragment>
     <fragment
         android:id="@+id/sellerPhotoFragment"
-        android:name="com.example.acedropseller.SellerPhotoFragment"
+        android:name="com.example.acedropseller.view.auth.SellerPhotoFragment"
         android:label="fragment_seller_photo"
         tools:layout="@layout/fragment_seller_photo" >
         <action

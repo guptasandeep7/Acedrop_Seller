@@ -20,7 +20,7 @@ class SellerPhotoFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentSellerPhotoBinding.inflate(inflater, container, false)
         val view = binding.root
-        binding.nextBtn.setOnClickListener{
+        binding.uploadBtn.setOnClickListener{
             findNavController().navigate(R.id.action_sellerPhotoFragment_to_dashboardActivity)
         }
         return view

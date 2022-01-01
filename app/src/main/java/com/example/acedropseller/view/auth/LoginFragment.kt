@@ -190,11 +190,19 @@ class LoginFragment : Fragment(), View.OnClickListener {
 
     private fun checkStatus(status:Int) {
         when(status){
-            0 -> Toast.makeText(requireContext(), "Everything pending", Toast.LENGTH_SHORT).show()
-            -1 -> Toast.makeText(requireContext(), "Not a shop", Toast.LENGTH_SHORT).show()
-            2 -> Toast.makeText(requireContext(), "Upload seller pic pending", Toast.LENGTH_SHORT).show()
-            1 -> Toast.makeText(requireContext(), "upload aadhar pic", Toast.LENGTH_SHORT).show()
-            3 -> Toast.makeText(requireContext(), "verified shop", Toast.LENGTH_SHORT).show()
+            0 -> {
+                findNavController().navigate(R.id.action_loginFragment_to_businessDetailsFragment)
+                Toast.makeText(requireContext(), "Business Details Pending", Toast.LENGTH_SHORT).show()
+            }
+            -1 -> Toast.makeText(requireContext(), "Invalid Email/Password", Toast.LENGTH_SHORT).show()
+            2 -> {
+                findNavController().navigate(R.id.action_loginFragment_to_sellerPhotoFragment)
+                Toast.makeText(requireContext(), "Upload seller pic pending", Toast.LENGTH_SHORT).show()
+            }
+            1 -> {
+                findNavController().navigate(R.id.action_loginFragment_to_aadharFragment)
+                Toast.makeText(requireContext(), "upload aadhar pic", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

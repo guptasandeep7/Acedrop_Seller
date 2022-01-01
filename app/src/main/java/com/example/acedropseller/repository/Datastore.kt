@@ -22,6 +22,7 @@ class Datastore(context: Context) {
         const val EMAIL_KEY = "email_key"
         const val ACCESS_TOKEN_KEY = "token_key"
         const val REF_TOKEN_KEY = "ref_token_key"
+        const val ID = "id"
     }
 
     suspend fun saveUserDetails(key: String, value: String) {
@@ -56,6 +57,7 @@ class Datastore(context: Context) {
         datastore.saveUserDetails(NAME_KEY, it.name!!)
         datastore.saveUserDetails(ACCESS_TOKEN_KEY, it.access_token!!)
         datastore.saveUserDetails(REF_TOKEN_KEY, it.refresh_token!!)
+        datastore.saveUserDetails(ID,it.id.toString())
     }
 }
 

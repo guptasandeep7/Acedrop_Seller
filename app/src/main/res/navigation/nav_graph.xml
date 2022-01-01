@@ -23,6 +23,15 @@
             app:popUpTo="@id/landingFragment"
             app:popUpToInclusive="true"
             />
+        <action
+            android:id="@+id/action_loginFragment_to_businessDetailsFragment"
+            app:destination="@id/businessDetailsFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_aadharFragment"
+            app:destination="@id/aadharFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_sellerPhotoFragment"
+            app:destination="@id/sellerPhotoFragment" />
     </fragment>
     <fragment
         android:id="@+id/signupFragment"
@@ -43,15 +52,16 @@
         android:name="com.example.acedropseller.view.auth.OtpFragment"
         android:label="fragment_otp"
         tools:layout="@layout/fragment_otp" >
-        <action
-            android:id="@+id/action_otpFragment_to_dashboardActivity"
-            app:destination="@id/dashboardActivity"
-            app:popUpTo="@id/landingFragment"
-            app:popUpToInclusive="true"/>
+
         <action
             android:id="@+id/action_otpFragment_to_passwordFragment"
             app:destination="@id/passwordFragment"
             app:popUpTo="@id/forgotFragment"
+            app:popUpToInclusive="false"/>
+        <action
+            android:id="@+id/action_otpFragment_to_businessDetailsFragment"
+            app:destination="@id/businessDetailsFragment"
+            app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="false"/>
     </fragment>
     <fragment
@@ -95,6 +105,42 @@
         <action
             android:id="@+id/action_landingFragment_to_signupFragment"
             app:destination="@id/signupFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/businessDetailsFragment"
+        android:name="com.example.acedropseller.view.auth.BusinessDetailsFragment"
+        android:label="BusinessDetailsFragment"
+        tools:layout="@layout/fragment_business_details">
+        <action
+            android:id="@+id/action_businessDetailsFragment_to_personalDetails"
+            app:destination="@id/personalDetails" />
+    </fragment>
+    <fragment
+        android:id="@+id/personalDetails"
+        android:name="com.example.acedropseller.view.auth.PersonalDetails"
+        android:label="PersonalDetails"
+        tools:layout="@layout/fragment_personal_details">
+        <action
+            android:id="@+id/action_personalDetails_to_aadharFragment"
+            app:destination="@id/aadharFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/aadharFragment"
+        android:name="com.example.acedropseller.view.auth.AadharFragment"
+        android:label="AadharFragment"
+        tools:layout="@layout/fragment_aadhar">
+        <action
+            android:id="@+id/action_aadharFragment_to_sellerPhotoFragment"
+            app:destination="@id/sellerPhotoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/sellerPhotoFragment"
+        android:name="com.example.acedropseller.SellerPhotoFragment"
+        android:label="fragment_seller_photo"
+        tools:layout="@layout/fragment_seller_photo" >
+        <action
+            android:id="@+id/action_sellerPhotoFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
     </fragment>
 
 </navigation>

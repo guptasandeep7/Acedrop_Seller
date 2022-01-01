@@ -167,12 +167,17 @@ class LoginFragment : Fragment(), View.OnClickListener {
 
             loginRepository.userDetails.observe(this, {
                 progressBar.visibility = View.GONE
-                datastore = Datastore(requireContext())
-                lifecycleScope.launch {
-                    datastore.saveToDatastore(it, requireContext())
-                    activity?.finish()
-                    findNavController().navigate(R.id.action_loginFragment_to_dashboardActivity)
+                if(it.status!=3)
+                checkStatus(it.status!!)
+                else{
+                    datastore = Datastore(requireContext())
+                    lifecycleScope.launch {
+                        datastore.saveToDatastore(it, requireContext())
+                        activity?.finish()
+                        findNavController().navigate(R.id.action_loginFragment_to_dashboardActivity)
+                    }
                 }
+
             })
 
             loginRepository.errorMessage.observe(this, {
@@ -181,6 +186,16 @@ class LoginFragment : Fragment(), View.OnClickListener {
                 Toast.makeText(this.context, it, Toast.LENGTH_SHORT).show()
             })
         } else binding.signinBtn.isEnabled = true
+    }
+
+    private fun checkStatus(status:Int) {
+        when(status){
+            0 -> Toast.makeText(requireContext(), "Everything pending", Toast.LENGTH_SHORT).show()
+            -1 -> Toast.makeText(requireContext(), "Not a shop", Toast.LENGTH_SHORT).show()
+            2 -> Toast.makeText(requireContext(), "Upload seller pic pending", Toast.LENGTH_SHORT).show()
+            1 -> Toast.makeText(requireContext(), "upload aadhar pic", Toast.LENGTH_SHORT).show()
+            3 -> Toast.makeText(requireContext(), "verified shop", Toast.LENGTH_SHORT).show()
+        }
     }
 
 

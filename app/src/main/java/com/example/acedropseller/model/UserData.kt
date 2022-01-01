@@ -10,6 +10,6 @@ data class UserData(
     val isShop: Boolean? = null,
     val message: String? = null,
     val newpass: String? = null,
-    val status:String?=null,
+    val status:Int?=null,
     val id:String?=null
 )

@@ -109,7 +109,7 @@ class OtpFragment : Fragment(), View.OnClickListener {
                             requireContext()
                         )
                         activity?.finish()
-                        findNavController().navigate(R.id.action_otpFragment_to_dashboardActivity)
+                        findNavController().navigate(R.id.action_otpFragment_to_bussinessDetailsFragment)
                     }
                 })
             }

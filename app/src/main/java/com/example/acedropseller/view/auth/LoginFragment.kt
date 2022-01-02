@@ -27,6 +27,10 @@ import kotlinx.coroutines.launch
 
 class LoginFragment : Fragment(), View.OnClickListener {
 
+    companion object {
+        var TOKEN: String = ""
+    }
+
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
     private lateinit var loginRepository: LoginRepository
@@ -125,6 +129,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
             binding.progressBar.visibility = View.GONE
             datastore = Datastore(requireContext())
             lifecycleScope.launch {
+                TOKEN = it.access_token.toString()
                 datastore.saveToDatastore(it, requireContext())
                 activity?.finish()
                 findNavController().navigate(R.id.action_loginFragment_to_dashboardActivity)
@@ -167,6 +172,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
 
             loginRepository.userDetails.observe(this, {
                 progressBar.visibility = View.GONE
+                TOKEN = it.access_token.toString()
                 if(it.status!=3)
                 checkStatus(it.status!!)
                 else{
@@ -201,7 +207,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
             }
             1 -> {
                 findNavController().navigate(R.id.action_loginFragment_to_aadharFragment)
-                Toast.makeText(requireContext(), "upload aadhar pic", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "upload Aadhar pic", Toast.LENGTH_SHORT).show()
             }
         }
     }

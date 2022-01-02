@@ -144,6 +144,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="22dp"
             android:src="@drawable/ic_upload"
+            android:scaleType="fitCenter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView9" />
@@ -164,6 +165,7 @@
             android:layout_height="200dp"
             android:layout_marginStart="22dp"
             android:layout_marginTop="16dp"
+            android:scaleType="fitCenter"
             android:layout_marginEnd="22dp"
             android:src="@drawable/ic_upload"
             app:layout_constraintEnd_toEndOf="parent"
@@ -196,6 +198,21 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView11" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.461" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

@@ -37,4 +37,12 @@ interface ApiInterface {
     @POST("/shop/createShop")
     fun createShop(@Body details: ShopDetails): Call<Message>
 
+    @FormUrlEncoded
+    @POST("/shop/createShopAdhaar")
+    fun uploadAadhar(@Field("images") images: Array<String>): Call<Message>
+
+    @FormUrlEncoded
+    @POST("/shop/createShopAdhaar")
+    fun uploadSellerPhoto(@Field("image") image: String): Call<Message>
+
 }

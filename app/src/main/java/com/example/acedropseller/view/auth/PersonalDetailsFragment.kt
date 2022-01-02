@@ -22,9 +22,6 @@ import java.util.*
 
 class PersonalDetailsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
     View.OnClickListener {
-    companion object {
-        lateinit var TOKEN: String
-    }
 
     lateinit var datastore: Datastore
     private var _binding: FragmentPersonalDetailsBinding? = null
@@ -42,10 +39,6 @@ class PersonalDetailsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
         _binding = FragmentPersonalDetailsBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        datastore = Datastore(requireContext())
-        lifecycleScope.launch {
-            TOKEN = datastore.getUserDetails(Datastore.ACCESS_TOKEN_KEY).toString()
-        }
         binding.dobBtn.setOnClickListener {
             val calendar: Calendar = Calendar.getInstance()
             day = calendar.get(Calendar.DAY_OF_MONTH)

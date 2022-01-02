@@ -22,15 +22,14 @@ class LandingFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         _binding = FragmentLandingBinding.inflate(inflater, container, false)
         val view = binding.root
         datastore = Datastore(requireContext())
 
         lifecycleScope.launch {
             if (datastore.isLogin()) {
-                activity?.finish()
                 findNavController().navigate(R.id.action_landingFragment_to_dashboardActivity)
+                activity?.finish()
             }
         }
 

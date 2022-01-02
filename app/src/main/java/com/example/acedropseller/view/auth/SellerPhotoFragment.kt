@@ -83,12 +83,12 @@ class SellerPhotoFragment : Fragment() {
                                 Toast.LENGTH_SHORT
                             )
                                 .show()
-                            binding.progressBar.visibility = View.GONE
-                            binding.uploadBtn.isEnabled = true
-                            binding.uploadImageButton.isEnabled = true
                             datastore = Datastore(requireContext())
                             lifecycleScope.launch {
                                 datastore.changeLoginState(true)
+                                binding.progressBar.visibility = View.GONE
+                                binding.uploadBtn.isEnabled = true
+                                binding.uploadImageButton.isEnabled = true
                                 activity?.finish()
                                 findNavController().navigate(R.id.action_sellerPhotoFragment_to_dashboardActivity)
                             }

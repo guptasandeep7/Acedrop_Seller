@@ -42,7 +42,7 @@ interface ApiInterface {
     fun uploadAadhar(@Field("images") images: Array<String>): Call<Message>
 
     @FormUrlEncoded
-    @POST("/shop/createShopAdhaar")
+    @POST("/shop/createShopSellerPic")
     fun uploadSellerPhoto(@Field("image") image: String): Call<Message>
 
 }

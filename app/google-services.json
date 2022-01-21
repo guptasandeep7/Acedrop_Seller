@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "407572651531",
+    "project_id": "acedrop-seller-1640952554752",
+    "storage_bucket": "acedrop-seller-1640952554752.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:407572651531:android:0a355f3013529c3936b10e",
+        "android_client_info": {
+          "package_name": "com.example.acedropseller"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "407572651531-ep4uqc5u0h286kj8cstbte8vndv0ckf5.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.acedropseller",
+            "certificate_hash": "9a86e7b88e9473b6aca99523734b15f55013acf5"
+          }
+        },
+        {
+          "client_id": "407572651531-1q8532la2fnmq2a0lf4mvimrtlfo0ptq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDk-Kc8eflJ8cg4bt_FCYEYIs5Mq9HQNs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "407572651531-1q8532la2fnmq2a0lf4mvimrtlfo0ptq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

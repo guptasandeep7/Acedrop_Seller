@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/landingFragment">
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.acedropseller.view.auth.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_signupFragment"
+            app:destination="@id/signupFragment"
+            app:popUpTo="@id/landingFragment"
+            app:popUpToInclusive="false"/>
+        <action
+            android:id="@+id/action_loginFragment_to_forgotFragment"
+            app:destination="@id/forgotFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity"
+            app:popUpTo="@id/landingFragment"
+            app:popUpToInclusive="true"
+            />
+        <action
+            android:id="@+id/action_loginFragment_to_businessDetailsFragment"
+            app:destination="@id/businessDetailsFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_aadharFragment"
+            app:destination="@id/aadharFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_sellerPhotoFragment"
+            app:destination="@id/sellerPhotoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signupFragment"
+        android:name="com.example.acedropseller.view.auth.SignupFragment"
+        android:label="fragment_signup"
+        tools:layout="@layout/fragment_signup">
+        <action
+            android:id="@+id/action_signupFragment_to_otpFragment"
+            app:destination="@id/otpFragment"/>
+        <action
+            android:id="@+id/action_signupFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/landingFragment"
+            app:popUpToInclusive="false"/>
+    </fragment>
+    <fragment
+        android:id="@+id/otpFragment"
+        android:name="com.example.acedropseller.view.auth.OtpFragment"
+        android:label="fragment_otp"
+        tools:layout="@layout/fragment_otp" >
+
+        <action
+            android:id="@+id/action_otpFragment_to_passwordFragment"
+            app:destination="@id/passwordFragment"
+            app:popUpTo="@id/forgotFragment"
+            app:popUpToInclusive="false"/>
+        <action
+            android:id="@+id/action_otpFragment_to_businessDetailsFragment"
+            app:destination="@id/businessDetailsFragment"
+            app:popUpTo="@id/loginFragment"
+            app:popUpToInclusive="false"/>
+    </fragment>
+    <fragment
+        android:id="@+id/forgotFragment"
+        android:name="com.example.acedropseller.view.auth.ForgotFragment"
+        android:label="fragment_forgot"
+        tools:layout="@layout/fragment_forgot" >
+        <action
+            android:id="@+id/action_forgotFragment_to_otpFragment"
+            app:destination="@id/otpFragment" />
+    </fragment>
+    <activity
+        android:id="@+id/dashboardActivity"
+        android:name="com.example.acedropseller.view.dash.DashboardActivity"
+        android:label="activity_dashboard"
+        tools:layout="@layout/activity_dashboard" />
+    <fragment
+        android:id="@+id/passwordFragment"
+        android:name="com.example.acedropseller.view.auth.PasswordFragment"
+        android:label="PasswordFragment"
+        tools:layout="@layout/fragment_password">
+        <action
+            android:id="@+id/action_passwordFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/landingFragment"
+            app:popUpToInclusive="false"/>
+    </fragment>
+    <fragment
+        android:id="@+id/landingFragment"
+        android:name="com.example.acedropseller.view.auth.LandingFragment"
+        android:label="fragment_landing"
+        tools:layout="@layout/fragment_landing" >
+        <action
+            android:id="@+id/action_landingFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_landingFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity"
+            app:popUpTo="@id/landingFragment"
+            app:popUpToInclusive="true"/>
+        <action
+            android:id="@+id/action_landingFragment_to_signupFragment"
+            app:destination="@id/signupFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/businessDetailsFragment"
+        android:name="com.example.acedropseller.view.auth.BusinessDetailsFragment"
+        android:label="BusinessDetailsFragment"
+        tools:layout="@layout/fragment_business_details">
+        <action
+            android:id="@+id/action_businessDetailsFragment_to_personalDetails"
+            app:destination="@id/personalDetails" />
+    </fragment>
+    <fragment
+        android:id="@+id/personalDetails"
+        android:name="com.example.acedropseller.view.auth.PersonalDetailsFragment"
+        android:label="PersonalDetails"
+        tools:layout="@layout/fragment_personal_details">
+        <action
+            android:id="@+id/action_personalDetails_to_aadharFragment"
+            app:destination="@id/aadharFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/aadharFragment"
+        android:name="com.example.acedropseller.view.auth.AadharFragment"
+        android:label="AadharFragment"
+        tools:layout="@layout/fragment_aadhar">
+        <action
+            android:id="@+id/action_aadharFragment_to_sellerPhotoFragment"
+            app:destination="@id/sellerPhotoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/sellerPhotoFragment"
+        android:name="com.example.acedropseller.view.auth.SellerPhotoFragment"
+        android:label="fragment_seller_photo"
+        tools:layout="@layout/fragment_seller_photo" >
+        <action
+            android:id="@+id/action_sellerPhotoFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
+    </fragment>
+
+</navigation>

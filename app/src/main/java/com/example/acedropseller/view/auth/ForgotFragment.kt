@@ -7,10 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.acedropseller.R
 import com.example.acedropseller.databinding.FragmentForgotBinding
 import com.example.acedropseller.repository.auth.ForgotRepository
+import kotlinx.coroutines.launch
 
 
 class ForgotFragment : Fragment() {
@@ -38,7 +40,8 @@ class ForgotFragment : Fragment() {
             if (isValid(email)) {
                 forgotRepository = ForgotRepository()
                 binding.progressBar.visibility = View.VISIBLE
-                forgotRepository.forgot(email)
+
+                    forgotRepository.forgot(email)
 
                 forgotRepository.message.observe(viewLifecycleOwner, {
                     SignupFragment.Email = email

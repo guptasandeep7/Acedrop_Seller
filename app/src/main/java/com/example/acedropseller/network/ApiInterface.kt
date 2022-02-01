@@ -1,6 +1,8 @@
 package com.example.acedropseller.network
 
 import com.example.acedropseller.model.*
+import com.example.acedropseller.model.dash.UploadProduct
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.Field
@@ -29,10 +31,14 @@ interface ApiInterface {
 
     @FormUrlEncoded
     @POST("/auth/logout")
-    fun logOut(@Field("refreshToken") refreshToken:String): Call<Message>
+    fun logOut(@Field("refreshToken") refreshToken: String): Call<Message>
 
     @POST("/auth/signupGoogle")
     fun gSignUp(@Body token: Token): Call<UserData>
+
+    @FormUrlEncoded
+    @POST("/auth/generateToken")
+    fun generateToken(@Field("refreshtoken") refreshToken: String): Call<AccessTkn>
 
     @POST("/shop/createShop")
     fun createShop(@Body details: ShopDetails): Call<Message>
@@ -44,5 +50,8 @@ interface ApiInterface {
     @FormUrlEncoded
     @POST("/shop/createShopSellerPic")
     fun uploadSellerPhoto(@Field("image") image: String): Call<Message>
+
+    @POST("/prod/createProduct")
+    fun uploadProduct(@Body uploadProduct: UploadProduct): Call<ResponseBody>
 
 }

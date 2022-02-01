@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import androidx.navigation.fragment.findNavController
 import com.example.acedropseller.R
 import com.example.acedropseller.databinding.FragmentBusinessDetailsBinding
 import com.example.acedropseller.model.BusinessDetails
@@ -33,7 +32,8 @@ class BusinessDetailsFragment : Fragment() {
             if (isValid(shopName, member, desc, address)) {
                 val data = BusinessDetails(shopName, member, desc, address)
                 val bundle = bundleOf("BusinessDetails" to data)
-                view.findNavController().navigate(R.id.action_businessDetailsFragment_to_personalDetails,bundle)
+                view.findNavController()
+                    .navigate(R.id.action_businessDetailsFragment_to_personalDetails, bundle)
             }
         }
         return view

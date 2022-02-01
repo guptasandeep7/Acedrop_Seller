@@ -5,25 +5,25 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore.Images.Media.getBitmap
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.acedropseller.R
 import com.example.acedropseller.databinding.FragmentAadharBinding
 import com.example.acedropseller.model.Message
-import com.example.acedropseller.network.ServiceBuilderToken
-import com.google.android.material.progressindicator.BaseProgressIndicator
+import com.example.acedropseller.network.ServiceBuilder
+import com.example.acedropseller.repository.Datastore
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 
-class AadharFragment : Fragment() {
+class AadharFragment : androidx.fragment.app.Fragment() {
 
     private var _binding: FragmentAadharBinding? = null
     private val binding get() = _binding!!
@@ -64,7 +64,7 @@ class AadharFragment : Fragment() {
             binding.backButton.isEnabled = false
             it.isEnabled = false
             binding.progressBar.visibility = View.VISIBLE
-            val images = Array(2) { "" }
+            val images = arrayOf<String>()
             val photoRef =
                 FirebaseStorage.getInstance().reference.child("Aadhar/${frontFilePath?.lastPathSegment}")
             photoRef.putFile(frontFilePath!!).addOnSuccessListener {
@@ -75,7 +75,9 @@ class AadharFragment : Fragment() {
                     photoRe.putFile(backFilePath!!).addOnSuccessListener {
                         it.storage.downloadUrl.addOnSuccessListener { uri ->
                             images[1] = uri.toString()
-                            uploadAadhar(images = images)
+                            lifecycleScope.launch {
+                                uploadAadhar(images = images)
+                            }
                             binding.progressBar.visibility = View.GONE
                             binding.uploadBtn.isEnabled = true
                             binding.frontButton.isEnabled = true
@@ -92,8 +94,9 @@ class AadharFragment : Fragment() {
         return view
     }
 
-    private fun uploadAadhar(images: Array<String>) {
-        ServiceBuilderToken.buildService().uploadAadhar(images = images)
+    private suspend fun uploadAadhar(images: Array<String>) {
+        val token = Datastore(requireContext()).getUserDetails(Datastore.ACCESS_TOKEN_KEY)
+        ServiceBuilder.buildService(token = token).uploadAadhar(images = images)
             .enqueue(object : Callback<Message?> {
                 override fun onResponse(call: Call<Message?>, response: Response<Message?>) {
                     when {

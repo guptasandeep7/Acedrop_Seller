@@ -67,33 +67,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:text="@string/enter_product_details"
-                    android:textSize="14sp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/add_product_btn"
-                    android:layout_width="0dp"
-                    android:layout_height="65dp"
-                    android:layout_marginStart="22dp"
-                    android:layout_marginTop="24dp"
-                    android:layout_marginEnd="22dp"
-                    android:text="@string/add_product"
-                    android:textAllCaps="false"
-                    app:cornerRadius="30dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/upload_image_Button" />
-
-                <ProgressBar
-                    android:id="@+id/progressBar"
-                    style="?android:attr/progressBarStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -123,6 +97,7 @@
                         android:inputType="textPersonName"
                         android:paddingStart="30dp"
                         android:paddingEnd="30dp"
+                        android:text="@={viewmodel.productName}"
                         android:textColorHint="#4D000000" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -141,16 +116,46 @@
                     app:helperTextTextColor="#FD0320"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/product_name_layout">
+                    app:layout_constraintTop_toBottomOf="@+id/short_desc_layout">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/product_desc"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="@string/product_description"
+                        android:hint="@string/description"
+                        android:inputType="textMultiLine"
+                        android:paddingStart="30dp"
+                        android:paddingEnd="30dp"
+                        android:text="@={viewmodel.productDesc}"
+                        android:textColorHint="#4D000000" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/short_desc_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="17dp"
+                    android:layout_marginEnd="22dp"
+                    app:boxCornerRadiusBottomEnd="30dp"
+                    app:boxCornerRadiusBottomStart="30dp"
+                    app:boxCornerRadiusTopEnd="30dp"
+                    app:boxCornerRadiusTopStart="30dp"
+                    app:helperTextTextColor="#FD0320"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/product_name_layout">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/short_desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/short_description"
                         android:inputType="textLongMessage"
                         android:paddingStart="30dp"
                         android:paddingEnd="30dp"
+                        android:text="@={viewmodel.shortDesc}"
                         android:textColorHint="#4D000000" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -161,9 +166,9 @@
                     android:layout_marginStart="22dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="22dp"
+                    android:background="@drawable/border_curve"
                     android:dropDownWidth="wrap_content"
-                    android:entries="@array/category_array"
-                    android:paddingHorizontal="30dp"
+                    android:paddingHorizontal="28dp"
                     android:spinnerMode="dropdown"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -194,6 +199,7 @@
                         android:inputType="number"
                         android:paddingStart="30dp"
                         android:paddingEnd="30dp"
+                        android:text="@={viewmodel.quantity}"
                         android:textColorHint="#4D000000" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -222,6 +228,36 @@
                         android:inputType="number"
                         android:paddingStart="30dp"
                         android:paddingEnd="30dp"
+                        android:text="@={viewmodel.basePrice}"
+                        android:textColorHint="#4D000000" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/offer_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="22dp"
+                    app:boxCornerRadiusBottomEnd="30dp"
+                    app:boxCornerRadiusBottomStart="30dp"
+                    app:boxCornerRadiusTopEnd="30dp"
+                    app:boxCornerRadiusTopStart="30dp"
+                    app:helperTextTextColor="#FD0320"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/price_layout">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/offer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/discount_in"
+                        android:inputType="number"
+                        android:paddingStart="30dp"
+                        android:paddingEnd="30dp"
+                        android:text="@={viewmodel.offer}"
                         android:textColorHint="#4D000000" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -233,37 +269,82 @@
                     android:layout_marginStart="22dp"
                     android:layout_marginTop="24dp"
                     android:layout_marginEnd="16dp"
-                    android:text="@string/upload_images_videos"
-                    android:textSize="14sp"
+                    android:text="@string/upload_images"
+                    android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/price_layout" />
+                    app:layout_constraintTop_toBottomOf="@+id/offer_layout" />
 
                 <ImageButton
                     android:id="@+id/upload_image_Button"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
                     android:layout_marginStart="22dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginEnd="22dp"
                     android:background="@drawable/border"
-                    android:scaleType="center"
+                    android:scaleType="fitCenter"
                     android:src="@drawable/ic_camera"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textview2" />
 
                 <ImageButton
                     android:id="@+id/upload_image2_Button"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
+                    android:layout_marginStart="22dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginEnd="22dp"
                     android:background="@drawable/border"
-                    android:scaleType="center"
-                    android:src="@drawable/ic_add"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_camera"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/upload_image_Button"
-                    app:layout_constraintTop_toBottomOf="@+id/textview2" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/upload_image_Button" />
 
+                <ImageButton
+                    android:id="@+id/upload_image3_Button"
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="22dp"
+                    android:background="@drawable/border"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_camera"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/upload_image2_Button" />
 
+                <ImageButton
+                    android:id="@+id/upload_image4_Button"
+                    android:layout_width="0dp"
+                    android:layout_height="200dp"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="22dp"
+                    android:background="@drawable/border"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/ic_camera"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/upload_image3_Button" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/add_product_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="65dp"
+                    android:layout_marginStart="22dp"
+                    android:layout_marginTop="28dp"
+                    android:layout_marginEnd="22dp"
+                    android:text="@string/add_product"
+                    android:textAllCaps="false"
+                    app:cornerRadius="30dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/upload_image4_Button" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>

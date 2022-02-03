@@ -13,6 +13,7 @@
         android:theme="@style/Theme.AcedropSeller">
         <activity
             android:name=".view.SplashScreenActivity"
+            android:theme="@style/SplashTheme"
             android:exported="true">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />

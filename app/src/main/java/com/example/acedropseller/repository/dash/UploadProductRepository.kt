@@ -1,20 +1,23 @@
 package com.example.acedropseller.repository.dash
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.acedropseller.model.dash.UploadProduct
 import com.example.acedropseller.network.ApiResponse
 import com.example.acedropseller.network.ServiceBuilder
 import com.example.acedropseller.repository.Datastore
-import com.example.acedropseller.utill.MyApplication
+import com.example.acedropseller.repository.Datastore.Companion.REF_TOKEN_KEY
+import com.example.acedropseller.utill.generateToken
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class UploadProductRepository{
+class UploadProductRepository {
 
     val data: MutableLiveData<ApiResponse<ResponseBody>> = MutableLiveData()
 
@@ -24,6 +27,8 @@ class UploadProductRepository{
     ): MutableLiveData<ApiResponse<ResponseBody>> {
 
         val token = Datastore(context).getUserDetails(Datastore.ACCESS_TOKEN_KEY)
+        Log.w("upload product repo", "access token : $token")
+
         val call = ServiceBuilder.buildService(token).uploadProduct(uploadProduct)
         data.postValue(ApiResponse.Loading())
         try {
@@ -36,18 +41,15 @@ class UploadProductRepository{
                         response.isSuccessful -> data.postValue(ApiResponse.Success(response.body()))
                         response.code() == 403 || response.code() == 402 -> {
 
-                            GlobalScope.launch {
-
-                                val result =  MyApplication().generateToken(
+                            runBlocking {
+                                generateToken(
                                     token!!,
-                                        Datastore(context).getUserDetails(
-                                            Datastore.REF_TOKEN_KEY
-                                        )!!, context
-                                    )
-
-                                if(result) uploadProduct(uploadProduct, context)
+                                    Datastore(context).getUserDetails(
+                                        REF_TOKEN_KEY
+                                    )!!, context
+                                )
+                                uploadProduct(uploadProduct,context)
                             }
-
                         }
                         else -> data.postValue(ApiResponse.Error(response.message()))
                     }

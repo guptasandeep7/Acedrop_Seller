@@ -1,10 +1,12 @@
 package com.example.acedropseller.repository.auth
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.example.acedropseller.model.Message
 import com.example.acedropseller.model.ShopDetails
-import com.example.acedropseller.network.ServiceBuilderToken
+import com.example.acedropseller.network.ServiceBuilder
+import com.example.acedropseller.repository.Datastore
 import com.example.acedropseller.view.auth.LoginFragment.Companion.TOKEN
 import retrofit2.Call
 import retrofit2.Callback
@@ -14,7 +16,7 @@ class ShopDetailsRepository {
     var message = MutableLiveData<String>()
     var errorMessage = MutableLiveData<String>()
 
-    fun createShop(
+    suspend fun createShop(
         shopName: String,
         phno: String,
         noOfMembers: String,
@@ -22,9 +24,11 @@ class ShopDetailsRepository {
         address: String,
         fName: String,
         aadhaarNo: String,
-        dob: String
+        dob: String,
+        context:Context
     ) {
-        val request = ServiceBuilderToken.buildService()
+        val token = Datastore(context).getUserDetails(Datastore.ACCESS_TOKEN_KEY)
+        val request = ServiceBuilder.buildService(token)
         val call = request.createShop(
             ShopDetails(
                 shopName = shopName,

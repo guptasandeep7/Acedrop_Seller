@@ -173,9 +173,9 @@ class LoginFragment : Fragment(), View.OnClickListener {
             loginRepository.userDetails.observe(this, {
                 progressBar.visibility = View.GONE
                 TOKEN = it.access_token.toString()
-                if(it.status!=3)
-                checkStatus(it.status!!)
-                else{
+                if (it.status != 3)
+                    checkStatus(it.status!!)
+                else {
                     datastore = Datastore(requireContext())
                     lifecycleScope.launch {
                         datastore.saveToDatastore(it, requireContext())
@@ -194,16 +194,19 @@ class LoginFragment : Fragment(), View.OnClickListener {
         } else binding.signinBtn.isEnabled = true
     }
 
-    private fun checkStatus(status:Int) {
-        when(status){
+    private fun checkStatus(status: Int) {
+        when (status) {
             0 -> {
                 findNavController().navigate(R.id.action_loginFragment_to_businessDetailsFragment)
-                Toast.makeText(requireContext(), "Business Details Pending", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Business Details Pending", Toast.LENGTH_SHORT)
+                    .show()
             }
-            -1 -> Toast.makeText(requireContext(), "Invalid Email/Password", Toast.LENGTH_SHORT).show()
+            -1 -> Toast.makeText(requireContext(), "Invalid Email/Password", Toast.LENGTH_SHORT)
+                .show()
             2 -> {
                 findNavController().navigate(R.id.action_loginFragment_to_sellerPhotoFragment)
-                Toast.makeText(requireContext(), "Upload seller pic pending", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Upload seller pic pending", Toast.LENGTH_SHORT)
+                    .show()
             }
             1 -> {
                 findNavController().navigate(R.id.action_loginFragment_to_aadharFragment)

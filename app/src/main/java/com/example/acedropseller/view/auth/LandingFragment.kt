@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.acedropseller.R
 import com.example.acedropseller.databinding.FragmentLandingBinding
 import com.example.acedropseller.repository.Datastore
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class LandingFragment : Fragment() {
@@ -21,17 +22,9 @@ class LandingFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentLandingBinding.inflate(inflater, container, false)
         val view = binding.root
-        datastore = Datastore(requireContext())
-
-        lifecycleScope.launch {
-            if (datastore.isLogin()) {
-                findNavController().navigate(R.id.action_landingFragment_to_dashboardActivity)
-                activity?.finish()
-            }
-        }
 
         binding.signinBtn.setOnClickListener {
             findNavController().navigate(R.id.action_landingFragment_to_loginFragment)

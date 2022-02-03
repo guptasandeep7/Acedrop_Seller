@@ -57,7 +57,7 @@ class PersonalDetailsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
     }
 
     override fun onDateSet(p0: DatePicker?, year: Int, month: Int, day: Int) {
-        binding.dobBtn.setText("${year}-${month + 1}-${day}")
+        binding.dobBtn.text = "${year}-${month + 1}-${day}"
         dob = "${year}-${month + 1}-${day}"
     }
 
@@ -98,16 +98,19 @@ class PersonalDetailsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
                     val businessDetails =
                         arguments?.getSerializable("BusinessDetails") as BusinessDetails
                     shopDetailsRepository = ShopDetailsRepository()
-                    shopDetailsRepository.createShop(
-                        businessDetails.shopName!!,
-                        phnNumber,
-                        businessDetails.member!!,
-                        businessDetails.desc!!,
-                        businessDetails.address!!,
-                        fName,
-                        aadhaarNo,
-                        dob
-                    )
+                    lifecycleScope.launch{
+                        shopDetailsRepository.createShop(
+                            businessDetails.shopName!!,
+                            phnNumber,
+                            businessDetails.member!!,
+                            businessDetails.desc!!,
+                            businessDetails.address!!,
+                            fName,
+                            aadhaarNo,
+                            dob,
+                            context = requireContext()
+                        )
+                    }
                     shopDetailsRepository.message.observe(viewLifecycleOwner, {
                         binding.progressBar.visibility = View.GONE
                         findNavController().navigate(R.id.action_personalDetails_to_aadharFragment)

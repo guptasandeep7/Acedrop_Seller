@@ -5,12 +5,9 @@
     <item android:id="@+id/homeFragment"
         android:title="@string/home"
         android:icon="@drawable/ic_home" />
-    <item android:id="@+id/categoryFragment"
-        android:title="@string/category"
-        android:icon="@drawable/ic_grid" />
-    <item android:id="@+id/cartFragment"
-        android:title="@string/cart"
-        android:icon="@drawable/ic_shopping_cart" />
+    <item android:id="@+id/itemsFragment"
+        android:title="Items"
+        android:icon="@drawable/ic_items" />
     <item android:id="@+id/profileFragment"
         android:title="@string/profile"
         android:icon="@drawable/ic_user"/>

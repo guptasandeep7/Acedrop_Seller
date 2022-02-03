@@ -15,7 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.acedropseller.R
 import com.example.acedropseller.databinding.FragmentSellerPhotoBinding
 import com.example.acedropseller.model.Message
-import com.example.acedropseller.network.ServiceBuilderToken
+import com.example.acedropseller.network.ServiceBuilder
 import com.example.acedropseller.repository.Datastore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.launch
@@ -56,7 +56,9 @@ class SellerPhotoFragment : Fragment() {
                 FirebaseStorage.getInstance().reference.child("Aadhar/${filePath?.lastPathSegment}")
             photoRef.putFile(filePath!!).addOnSuccessListener {
                 it.storage.downloadUrl.addOnSuccessListener { uri ->
-                    uploadSellerImage(image = uri.toString())
+                    lifecycleScope.launch {
+                        uploadSellerImage(image = uri.toString())
+                    }
                     binding.progressBar.visibility = View.GONE
                     binding.uploadBtn.isEnabled = true
                     binding.uploadImageButton.isEnabled = true
@@ -71,8 +73,9 @@ class SellerPhotoFragment : Fragment() {
         return view
     }
 
-    private fun uploadSellerImage(image: String) {
-        ServiceBuilderToken.buildService().uploadSellerPhoto(image = image)
+    private suspend fun uploadSellerImage(image: String) {
+        val token = Datastore(requireContext()).getUserDetails(Datastore.ACCESS_TOKEN_KEY)
+        ServiceBuilder.buildService(token = token).uploadSellerPhoto(image = image)
             .enqueue(object : Callback<Message?> {
                 override fun onResponse(call: Call<Message?>, response: Response<Message?>) {
                     when {

@@ -1,6 +1,7 @@
 package com.example.acedropseller.view.dash
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.acedropseller.R
 import com.example.acedropseller.databinding.FragmentHomeBinding
 import com.example.acedropseller.repository.Datastore
+import com.example.acedropseller.repository.Datastore.Companion.ACCESS_TOKEN_KEY
 import com.example.acedropseller.repository.Datastore.Companion.EMAIL_KEY
 import com.example.acedropseller.repository.Datastore.Companion.NAME_KEY
 import com.example.acedropseller.repository.Datastore.Companion.REF_TOKEN_KEY
@@ -41,6 +43,8 @@ class HomeFragment : Fragment() {
                 it.text = datastore?.getUserDetails(NAME_KEY)
                 it.append("\n${datastore?.getUserDetails(EMAIL_KEY)}")
             }
+            Log.w("HOME FRAGMENT", "ACCESS TOKEN : ${datastore?.getUserDetails(ACCESS_TOKEN_KEY)}", )
+            Log.w("HOME FRAGMENT", "refresh token : ${datastore?.getUserDetails(REF_TOKEN_KEY)}", )
         }
 
         binding.signOutBtn.setOnClickListener {

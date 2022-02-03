@@ -13,19 +13,20 @@ class GoogleSignRepository {
     var userData = MutableLiveData<UserData>()
     var errorMessage = MutableLiveData<String>()
 
-    fun gSignUp(token:String) {
-        val request = ServiceBuilder.buildService()
+    fun gSignUp(token: String) {
+        val request = ServiceBuilder.buildService(token)
         val call = request.gSignUp(Token(token))
         call.enqueue(object : Callback<UserData?> {
             override fun onResponse(call: Call<UserData?>, response: Response<UserData?>) {
                 when {
                     response.isSuccessful -> userData.postValue(response.body())
-                    response.code()==503 -> errorMessage.postValue(response.message())
+                    response.code() == 503 -> errorMessage.postValue(response.message())
                     else -> errorMessage.postValue(
                         response.message()
                     )
                 }
             }
+
             override fun onFailure(call: Call<UserData?>, t: Throwable) {
                 errorMessage.value = t.message
             }

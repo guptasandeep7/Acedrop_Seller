@@ -43,5 +43,30 @@
     <string name="address">Address</string>
     <string name="father_s_name">Father\'s Name</string>
     <string name="date_of_birth">Date of Birth</string>
+    <string name="add_product">Add Product</string>
+    <string name="enter_product_details">ENTER PRODUCT DETAILS</string>
+    <string name="product_name">Product Name</string>
+    <string name="product_description">Product Description</string>
+    <string name="quantity">Quantity</string>
+    <string name="price">Price</string>
+    <string name="upload_images">Upload Images</string>
+    <string name="discount_in">Discount (in %)</string>
+    <string name="short_description">Short Description</string>
+    <string-array name="category_array">
+        <item>@string/category</item>
+        <item>Jewellery</item>
+        <item>Paintings and portraits</item>
+        <item>Bakery and chocolates</item>
+        <item>Crystal And resin art</item>
+        <item>Under garments</item>
+        <item>Thrift Shops</item>
+        <item>Decorative items</item>
+        <item>Customised gifts</item>
+        <item>Closet and wearable</item>
+        <item>Stickers and fun</item>
+        <item>DIYs</item>
+        <item>Makeup and accessories</item>
+        <item>Others</item>
+    </string-array>
 
 </resources>

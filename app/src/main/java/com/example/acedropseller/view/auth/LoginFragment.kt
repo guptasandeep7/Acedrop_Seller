@@ -48,6 +48,8 @@ class LoginFragment : Fragment(), View.OnClickListener {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         val view = binding.root
 
+        datastore = Datastore(requireContext())
+
         binding.signinToSignup.setOnClickListener(this)
         binding.forgotTxt.setOnClickListener(this)
         binding.signinBtn.setOnClickListener(this)

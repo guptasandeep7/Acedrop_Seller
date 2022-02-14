@@ -24,7 +24,7 @@
     <string name="create_password">Create Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="confirmation_code">Confirmation Code</string>
-    <string name="didn_t_recieve_the_code_resend_now">Didn’t recieve the code? <font color="#1983FF">Resend Now</font></string>
+    <string name="didn_t_recieve_the_code_resend_now">Didn’t receive the code? <font color="#1983FF">Resend Now</font></string>
     <string name="_00_30">00:30</string>
     <string name="home">Home</string>
     <string name="category">Category</string>
@@ -49,10 +49,15 @@
     <string name="product_description">Product Description</string>
     <string name="quantity">Quantity</string>
     <string name="price">Price</string>
+    <string name="Rs">\u20B9</string>
     <string name="upload_images">Upload Images</string>
     <string name="discount_in">Discount (in %)</string>
     <string name="short_description">Short Description</string>
     <string name="welcome_back_nice_to_see_you">Welcome back, nice to see you!</string>
+    <string name="reject">Reject</string>
+    <string name="accept">Accept</string>
+    <string name="accepted">Accepted</string>
+    <string name="rejected">Rejected</string>
     <string-array name="category_array">
         <item>@string/category</item>
         <item>Jewellery</item>
@@ -65,7 +70,7 @@
         <item>Customised gifts</item>
         <item>Closet and wearable</item>
         <item>Stickers and fun</item>
-        <item>DIY's</item>
+        <item>DIY\'s</item>
         <item>Makeup and accessories</item>
         <item>Others</item>
     </string-array>

@@ -1,33 +1,38 @@
 package com.example.acedropseller.view.dash
 
+import android.app.AlertDialog
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.example.acedropseller.R
+import com.example.acedropseller.adapter.HomeAdapter
 import com.example.acedropseller.databinding.FragmentHomeBinding
+import com.example.acedropseller.model.dash.home.HomeItem
+import com.example.acedropseller.network.ApiResponse
 import com.example.acedropseller.repository.Datastore
 import com.example.acedropseller.repository.Datastore.Companion.ACCESS_TOKEN_KEY
-import com.example.acedropseller.repository.Datastore.Companion.EMAIL_KEY
 import com.example.acedropseller.repository.Datastore.Companion.NAME_KEY
 import com.example.acedropseller.repository.Datastore.Companion.REF_TOKEN_KEY
-import com.example.acedropseller.repository.auth.SignOutRepository
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInClient
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.example.acedropseller.utill.ProgressDialog
+import com.example.acedropseller.viewmodel.HomeViewModel
 import kotlinx.coroutines.launch
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    lateinit var signOutRepository: SignOutRepository
-    lateinit var googleSignInClient: GoogleSignInClient
-    private lateinit var gso: GoogleSignInOptions
+    private val homeViewModel: HomeViewModel by activityViewModels()
+    private var homeAdapter = HomeAdapter()
+    lateinit var dialog:Dialog
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -42,55 +47,147 @@ class HomeFragment : Fragment() {
             binding.textviewName.let {
                 it.text = "Hello, ${datastore?.getUserDetails(NAME_KEY)}"
             }
-            Log.w("HOME FRAGMENT", "ACCESS TOKEN : ${datastore?.getUserDetails(ACCESS_TOKEN_KEY)}", )
-            Log.w("HOME FRAGMENT", "refresh token : ${datastore?.getUserDetails(REF_TOKEN_KEY)}", )
-        }
-
-        binding.signOutBtn.setOnClickListener {
-            binding.progressBar.visibility = View.VISIBLE
-            signOutRepository = SignOutRepository()
-            signOutRepository.let { it ->
-                lifecycleScope.launch {
-                    it.signOut(datastore?.getUserDetails(REF_TOKEN_KEY)!!)
-                }
-                it.message.observe(viewLifecycleOwner, {
-                    lifecycleScope.launch {
-                        datastore?.changeLoginState(false)
-                        signout()
-                        activity?.finish()
-                        findNavController().navigate(R.id.action_homeFragment_to_authActivity)
-                    }
-
-                })
-
-                it.errorMessage.observe(viewLifecycleOwner, {
-                    binding.progressBar.visibility = View.GONE
-                    Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-                })
-            }
+            Log.w("HOME FRAGMENT", "ACCESS TOKEN : ${datastore?.getUserDetails(ACCESS_TOKEN_KEY)}")
+            Log.w("HOME FRAGMENT", "refresh token : ${datastore?.getUserDetails(REF_TOKEN_KEY)}")
         }
 
         return view
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.server_client_id))
-            .requestEmail()
-            .build()
-        googleSignInClient = GoogleSignIn.getClient(requireActivity(), gso)
+        dialog = ProgressDialog.progressDialog(requireContext())
+
+        getHomeData()
+
+        homeAdapter.setOnItemClickListener(object : HomeAdapter.onItemClickListener {
+            override fun acceptOrder(position: Int) {
+                    acceptDialog(homeAdapter.orderList[position].orders[0].order_item.id)
+            }
+
+            override fun cancelOrder(position: Int) {
+                rejectDialog(homeAdapter.orderList[position].orders[0].order_item.id)
+            }
+        })
     }
 
-    private fun signout(): Boolean {
-        var result: Boolean = false
-        googleSignInClient.signOut().addOnCompleteListener {
-            result = true
-        }.addOnCanceledListener {
-            result = false
+    private fun acceptDialog(id: Int) {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Accept Order")
+            .setMessage("Are you sure you want to accept this order?")
+            .setPositiveButton("Accept") { _, _ ->
+                acceptOrder(id)
+            }
+            .setNeutralButton("Cancel") { dialog, _ -> dialog.dismiss()}
+        val exit = builder.create()
+        exit.show()
+    }
+
+    private fun rejectDialog(id: Int) {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Reject Order")
+            .setMessage("Are you sure you want to reject this order?")
+            .setPositiveButton("Reject") { _, _ ->
+                rejectOrder(id)
+            }
+            .setNeutralButton("Back") { dialog, _ -> dialog.dismiss()}
+        val exit = builder.create()
+        exit.show()
+    }
+
+    private fun acceptOrder(id: Int) {
+        homeViewModel.acceptOrder(id,requireContext()).observe(viewLifecycleOwner, {
+            when(it){
+                is ApiResponse.Success -> {
+                    dialog.cancel()
+                    resultDialog(R.layout.accepted_dialog)
+                }
+                is ApiResponse.Loading -> {
+                    dialog.show()
+                }
+                is ApiResponse.Error -> {
+                    dialog.cancel()
+                    Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+    }
+
+    private fun rejectOrder(id: Int) {
+        homeViewModel.rejectOrder(id,requireContext()).observe(viewLifecycleOwner, {
+            when(it){
+                is ApiResponse.Success -> {
+                    dialog.cancel()
+                    resultDialog(R.layout.rejected_dialog)
+                }
+                is ApiResponse.Loading -> {
+                    dialog.show()
+                }
+                is ApiResponse.Error -> {
+                    dialog.cancel()
+                    Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+    }
+
+    private fun resultDialog(layout:Int) {
+        val dialog = Dialog(requireContext())
+        dialog.setContentView(layout)
+        dialog.setCancelable(true)
+        dialog.window!!.setBackgroundDrawable(
+            ColorDrawable(Color.TRANSPARENT)
+        )
+        dialog.show()
+
+        Handler().postDelayed(
+            {
+                dialog.dismiss()
+            }, 4000
+        )
+    }
+
+    private fun getHomeData() {
+        homeViewModel.getHomeData(requireContext()).observe(viewLifecycleOwner, {
+            when (it) {
+                is ApiResponse.Success -> {
+                    binding.progressBar.visibility = View.GONE
+                    it.data?.let { it1 -> homeAdapter.updateOrderList(changeOrderList(it1)) }
+                    binding.homeRv.adapter = homeAdapter
+                    binding.orderRev.text = homeAdapter.orderList.size.toString()
+                }
+                is ApiResponse.Loading -> binding.progressBar.visibility = View.VISIBLE
+                is ApiResponse.Error -> {
+                    binding.progressBar.visibility = View.GONE
+                    Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+    }
+
+    private fun changeOrderList(homeItems: List<HomeItem>): MutableList<HomeItem> {
+        val orderList = mutableListOf<HomeItem>()
+        homeItems.forEach {
+            it.orders.forEach { it2 ->
+                orderList.add(
+                    HomeItem(
+                        it.basePrice,
+                        it.description,
+                        it.discountedPrice,
+                        it.id,
+                        it.imgUrls,
+                        it.offers,
+                        listOf(it2),
+                        it.shopId,
+                        it.shortDescription,
+                        it.stock,
+                        it.title
+                    )
+                )
+            }
         }
-        return result
+        return orderList
     }
 
     override fun onDestroyView() {

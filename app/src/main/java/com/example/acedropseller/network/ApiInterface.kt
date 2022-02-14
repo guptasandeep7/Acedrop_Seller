@@ -2,12 +2,10 @@ package com.example.acedropseller.network
 
 import com.example.acedropseller.model.*
 import com.example.acedropseller.model.dash.UploadProduct
+import com.example.acedropseller.model.dash.home.HomeItem
 import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface ApiInterface {
 
@@ -54,4 +52,14 @@ interface ApiInterface {
     @POST("/prod/createProduct")
     fun uploadProduct(@Body uploadProduct: UploadProduct): Call<ResponseBody>
 
+    @GET("/seller/getOrders")
+    fun getOrderList():Call<List<HomeItem>>
+
+    @FormUrlEncoded
+    @POST("/seller/acceptOrder")
+    fun acceptOrder(@Field("order_itemId") order_itemId:String):Call<ResponseBody>
+
+    @FormUrlEncoded
+    @POST("/seller/rejectOrder")
+    fun rejectOrder(@Field("order_itemId") order_itemId:String):Call<ResponseBody>
 }

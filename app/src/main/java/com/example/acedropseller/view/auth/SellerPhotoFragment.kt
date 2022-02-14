@@ -17,8 +17,10 @@ import com.example.acedropseller.databinding.FragmentSellerPhotoBinding
 import com.example.acedropseller.model.Message
 import com.example.acedropseller.network.ServiceBuilder
 import com.example.acedropseller.repository.Datastore
+import com.example.acedropseller.utill.generateToken
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -94,6 +96,17 @@ class SellerPhotoFragment : Fragment() {
                                 binding.uploadImageButton.isEnabled = true
                                 activity?.finish()
                                 findNavController().navigate(R.id.action_sellerPhotoFragment_to_dashboardActivity)
+                            }
+                        }
+                        response.code() == 403 -> {
+                            runBlocking {
+                                generateToken(
+                                    token!!,
+                                    Datastore(requireContext()).getUserDetails(
+                                        Datastore.REF_TOKEN_KEY
+                                    )!!, requireContext()
+                                )
+                                uploadSellerImage(image)
                             }
                         }
                         else -> {

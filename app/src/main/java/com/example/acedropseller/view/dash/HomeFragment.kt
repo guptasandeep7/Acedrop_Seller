@@ -40,8 +40,7 @@ class HomeFragment : Fragment() {
 
         lifecycleScope.launch {
             binding.textviewName.let {
-                it.text = datastore?.getUserDetails(NAME_KEY)
-                it.append("\n${datastore?.getUserDetails(EMAIL_KEY)}")
+                it.text = "Hello, ${datastore?.getUserDetails(NAME_KEY)}"
             }
             Log.w("HOME FRAGMENT", "ACCESS TOKEN : ${datastore?.getUserDetails(ACCESS_TOKEN_KEY)}", )
             Log.w("HOME FRAGMENT", "refresh token : ${datastore?.getUserDetails(REF_TOKEN_KEY)}", )

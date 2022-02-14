@@ -88,7 +88,7 @@ class UploadProductFragment : Fragment(), View.OnClickListener {
 
                 is ApiResponse.TokenExpire -> {
                     dialog.dismiss()
-                    Toast.makeText(requireContext(), "Refresh token false", Toast.LENGTH_SHORT)
+                    Toast.makeText(requireContext(), "Refresh Token Expire login again !!!", Toast.LENGTH_SHORT)
                         .show()
                     startActivity(Intent(activity, AuthActivity::class.java))
                 }

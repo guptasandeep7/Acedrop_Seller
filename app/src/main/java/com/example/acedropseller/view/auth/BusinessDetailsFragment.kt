@@ -6,10 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.example.acedropseller.R
 import com.example.acedropseller.databinding.FragmentBusinessDetailsBinding
 import com.example.acedropseller.model.BusinessDetails
+import com.example.acedropseller.repository.Datastore
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class BusinessDetailsFragment : Fragment() {
 
@@ -61,6 +65,14 @@ class BusinessDetailsFragment : Fragment() {
                 false
             }
             else -> true
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            Datastore(requireContext()).changeLoginState(false)
         }
     }
 

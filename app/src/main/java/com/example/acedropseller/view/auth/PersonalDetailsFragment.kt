@@ -1,6 +1,7 @@
 package com.example.acedropseller.view.auth
 
 import android.app.DatePickerDialog
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,9 +15,16 @@ import androidx.navigation.fragment.findNavController
 import com.example.acedropseller.R
 import com.example.acedropseller.databinding.FragmentPersonalDetailsBinding
 import com.example.acedropseller.model.BusinessDetails
+import com.example.acedropseller.model.Message
+import com.example.acedropseller.model.ShopDetails
+import com.example.acedropseller.network.ServiceBuilder
 import com.example.acedropseller.repository.Datastore
-import com.example.acedropseller.repository.auth.ShopDetailsRepository
+import com.example.acedropseller.utill.generateToken
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 
 
@@ -30,7 +38,6 @@ class PersonalDetailsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
     private var month: Int = 0
     private var year: Int = 0
     lateinit var dob: String
-    lateinit var shopDetailsRepository: ShopDetailsRepository
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -97,9 +104,8 @@ class PersonalDetailsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
                 if (isValid(phnNumber, aadhaarNo, fName)) {
                     val businessDetails =
                         arguments?.getSerializable("BusinessDetails") as BusinessDetails
-                    shopDetailsRepository = ShopDetailsRepository()
-                    lifecycleScope.launch{
-                        shopDetailsRepository.createShop(
+                    lifecycleScope.launch {
+                        createShop(
                             businessDetails.shopName!!,
                             phnNumber,
                             businessDetails.member!!,
@@ -111,22 +117,87 @@ class PersonalDetailsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
                             context = requireContext()
                         )
                     }
-                    shopDetailsRepository.message.observe(viewLifecycleOwner, {
-                        binding.progressBar.visibility = View.GONE
-                        findNavController().navigate(R.id.action_personalDetails_to_aadharFragment)
-                    })
-                    shopDetailsRepository.errorMessage.observe(viewLifecycleOwner, {
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(this.context, it, Toast.LENGTH_SHORT).show()
-                        binding.nextBtn.isEnabled = true
-                    })
                 } else {
                     binding.nextBtn.isEnabled = true
                     binding.progressBar.visibility = View.GONE
-
                 }
             }
         }
+    }
+
+    private suspend fun createShop(
+        shopName: String,
+        phno: String,
+        noOfMembers: String,
+        desc: String,
+        address: String,
+        fName: String,
+        aadhaarNo: String,
+        dob: String,
+        context: Context
+    ) {
+        val token = Datastore(context).getUserDetails(Datastore.ACCESS_TOKEN_KEY)
+        val request = ServiceBuilder.buildService(token)
+        val call = request.createShop(
+            ShopDetails(
+                shopName = shopName,
+                phno = phno,
+                noOfMembers = noOfMembers,
+                description = desc,
+                address = address,
+                fathersName = fName,
+                aadhaarNo = aadhaarNo,
+                dob = dob
+            )
+        )
+        call.enqueue(object : Callback<Message?> {
+            override fun onResponse(call: Call<Message?>, response: Response<Message?>) {
+                when {
+                    response.isSuccessful -> {
+                        binding.progressBar.visibility = View.GONE
+                        findNavController().navigate(R.id.action_personalDetails_to_aadharFragment)
+                    }
+                    response.code() == 404 -> errorMessage("Shop does not exists")
+
+                    response.code() == 401 -> errorMessage("Aadhar number is invalid")
+
+                    response.code() == 400 -> errorMessage("Shop already exists")
+
+                    response.code() == 403 -> {
+                        runBlocking {
+                            generateToken(
+                                token!!,
+                                Datastore(context).getUserDetails(
+                                    Datastore.REF_TOKEN_KEY
+                                )!!, context
+                            )
+                            ShopDetails(
+                                shopName = shopName,
+                                phno = phno,
+                                noOfMembers = noOfMembers,
+                                description = desc,
+                                address = address,
+                                fathersName = fName,
+                                aadhaarNo = aadhaarNo,
+                                dob = dob
+                            )
+                        }
+                    }
+                    else -> errorMessage("Something went wrong! Try again")
+                }
+            }
+
+            override fun onFailure(call: Call<Message?>, t: Throwable) {
+                errorMessage(t.message.toString())
+            }
+        })
+
+    }
+
+    fun errorMessage(errorMessage: String) {
+        Toast.makeText(this.context, errorMessage, Toast.LENGTH_SHORT).show()
+        binding.progressBar.visibility = View.GONE
+        binding.nextBtn.isEnabled = true
     }
 
     override fun onDestroyView() {

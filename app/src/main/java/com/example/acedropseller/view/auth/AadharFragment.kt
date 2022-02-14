@@ -14,10 +14,13 @@ import androidx.navigation.fragment.findNavController
 import com.example.acedropseller.R
 import com.example.acedropseller.databinding.FragmentAadharBinding
 import com.example.acedropseller.model.Message
+import com.example.acedropseller.model.ShopDetails
 import com.example.acedropseller.network.ServiceBuilder
 import com.example.acedropseller.repository.Datastore
+import com.example.acedropseller.utill.generateToken
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -112,6 +115,17 @@ class AadharFragment : androidx.fragment.app.Fragment() {
                             binding.frontButton.isEnabled = true
                             binding.backButton.isEnabled = true
                             findNavController().navigate(R.id.action_aadharFragment_to_sellerPhotoFragment)
+                        }
+                        response.code() == 403 -> {
+                            runBlocking {
+                                generateToken(
+                                    token!!,
+                                    Datastore(requireContext()).getUserDetails(
+                                        Datastore.REF_TOKEN_KEY
+                                    )!!, requireContext()
+                                )
+                                uploadAadhar(images)
+                            }
                         }
                         else -> {
                             Toast.makeText(

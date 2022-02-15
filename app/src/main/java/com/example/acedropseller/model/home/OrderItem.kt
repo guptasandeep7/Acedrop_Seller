@@ -1,4 +1,4 @@
-package com.example.acedropseller.model.dash.home
+package com.example.acedropseller.model.home
 
 data class OrderItem(
     val createdAt: String,

@@ -3,7 +3,7 @@ package com.example.acedropseller.repository.dash.home
 import android.content.Context
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
-import com.example.acedropseller.model.dash.home.HomeItem
+import com.example.acedropseller.model.home.HomeItem
 import com.example.acedropseller.network.ApiResponse
 import com.example.acedropseller.network.ServiceBuilder
 import com.example.acedropseller.repository.Datastore

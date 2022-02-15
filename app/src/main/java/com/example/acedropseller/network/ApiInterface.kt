@@ -2,7 +2,7 @@ package com.example.acedropseller.network
 
 import com.example.acedropseller.model.*
 import com.example.acedropseller.model.dash.UploadProduct
-import com.example.acedropseller.model.dash.home.HomeItem
+import com.example.acedropseller.model.home.HomeItem
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -62,4 +62,7 @@ interface ApiInterface {
     @FormUrlEncoded
     @POST("/seller/rejectOrder")
     fun rejectOrder(@Field("order_itemId") order_itemId:String):Call<ResponseBody>
+
+    @GET("/seller/getProds")
+    fun getProductList():Call<List<ProductData>>
 }

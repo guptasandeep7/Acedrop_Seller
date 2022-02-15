@@ -6,58 +6,54 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.acedropseller.R
-import com.example.acedropseller.databinding.HomeItemBinding
-import com.example.acedropseller.model.home.HomeItem
+import com.example.acedropseller.databinding.ProductItemBinding
+import com.example.acedropseller.model.ProductData
 
-class HomeAdapter : RecyclerView.Adapter<HomeAdapter.ViewHolder>() {
+class ProductAdapter : RecyclerView.Adapter<ProductAdapter.ViewHolder>() {
 
-    var orderList = mutableListOf<HomeItem>()
-    fun updateOrderList(homeItems: List<HomeItem>) {
-        orderList = homeItems.toMutableList()
+    var productList = mutableListOf<ProductData>()
+    fun updateProductList(productList: List<ProductData>) {
+        this.productList = productList.toMutableList()
         notifyDataSetChanged()
     }
 
     private var mlistner: onItemClickListener? = null
 
     interface onItemClickListener {
-        fun acceptOrder(position: Int)
-        fun cancelOrder(position: Int)
+        fun Update(position: Int)
     }
 
     fun setOnItemClickListener(listener: onItemClickListener) {
         mlistner = listener
     }
 
-    class ViewHolder(val binding: HomeItemBinding, listener: onItemClickListener) :
+    class ViewHolder(val binding: ProductItemBinding, listener: onItemClickListener) :
         RecyclerView.ViewHolder(binding.root) {
-        fun bind(homeItem: HomeItem) {
-            binding.homeItem = homeItem
+        fun bind(product: ProductData) {
+            binding.product = product
             binding.productBasePrice.paintFlags = Paint.STRIKE_THRU_TEXT_FLAG
         }
 
         init {
-            binding.cancelBtn.setOnClickListener {
-                listener.cancelOrder(adapterPosition)
-            }
-            binding.acceptBtn.setOnClickListener {
-                listener.acceptOrder(adapterPosition)
+            binding.updateBtn.setOnClickListener {
+                listener.Update(adapterPosition)
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val binding: HomeItemBinding = DataBindingUtil.inflate(
+        val binding: ProductItemBinding = DataBindingUtil.inflate(
             LayoutInflater.from(parent.context),
-            R.layout.home_item, parent, false
+            R.layout.product_item, parent, false
         )
         return ViewHolder(binding, mlistner!!)
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            holder.bind(orderList[position])
+        holder.bind(productList[position])
     }
 
     override fun getItemCount(): Int {
-        return orderList.size
+        return productList.size
     }
 }

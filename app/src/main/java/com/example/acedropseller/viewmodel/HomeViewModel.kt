@@ -4,7 +4,7 @@ import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.acedropseller.model.dash.home.HomeItem
+import com.example.acedropseller.model.home.HomeItem
 import com.example.acedropseller.network.ApiResponse
 import com.example.acedropseller.repository.dash.home.HomeRepository
 import kotlinx.coroutines.launch

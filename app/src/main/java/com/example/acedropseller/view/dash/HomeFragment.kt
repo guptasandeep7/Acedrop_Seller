@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
+import android.os.SystemClock
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -17,7 +18,7 @@ import androidx.lifecycle.lifecycleScope
 import com.example.acedropseller.R
 import com.example.acedropseller.adapter.HomeAdapter
 import com.example.acedropseller.databinding.FragmentHomeBinding
-import com.example.acedropseller.model.dash.home.HomeItem
+import com.example.acedropseller.model.home.HomeItem
 import com.example.acedropseller.network.ApiResponse
 import com.example.acedropseller.repository.Datastore
 import com.example.acedropseller.repository.Datastore.Companion.ACCESS_TOKEN_KEY
@@ -33,6 +34,7 @@ class HomeFragment : Fragment() {
     private val homeViewModel: HomeViewModel by activityViewModels()
     private var homeAdapter = HomeAdapter()
     lateinit var dialog:Dialog
+    private var mLastClickTime = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -63,11 +65,19 @@ class HomeFragment : Fragment() {
 
         homeAdapter.setOnItemClickListener(object : HomeAdapter.onItemClickListener {
             override fun acceptOrder(position: Int) {
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 500) {
+                    return
+                } else {
                     acceptDialog(homeAdapter.orderList[position].orders[0].order_item.id)
+                }
             }
 
             override fun cancelOrder(position: Int) {
-                rejectDialog(homeAdapter.orderList[position].orders[0].order_item.id)
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 500) {
+                    return
+                } else {
+                    rejectDialog(homeAdapter.orderList[position].orders[0].order_item.id)
+                }
             }
         })
     }

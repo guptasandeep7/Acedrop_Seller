@@ -1,6 +1,7 @@
 package com.example.acedropseller.network
 
 import com.example.acedropseller.model.*
+import com.example.acedropseller.model.dash.ShopResult
 import com.example.acedropseller.model.dash.UploadProduct
 import com.example.acedropseller.model.home.HomeItem
 import okhttp3.ResponseBody
@@ -43,11 +44,15 @@ interface ApiInterface {
 
     @FormUrlEncoded
     @POST("/shop/createShopAdhaar")
-    fun uploadAadhar(@Field("images") images: Array<String>): Call<Message>
+    fun uploadAadhar(@Field("images") images: MutableList<String>): Call<Message>
 
     @FormUrlEncoded
     @POST("/shop/createShopSellerPic")
     fun uploadSellerPhoto(@Field("image") image: String): Call<Message>
+
+    @FormUrlEncoded
+    @POST("/shop/coverPic")
+    fun uploadShopPhoto(@Field("image") image: String): Call<Message>
 
     @POST("/prod/createProduct")
     fun uploadProduct(@Body uploadProduct: UploadProduct): Call<ResponseBody>
@@ -65,4 +70,15 @@ interface ApiInterface {
 
     @GET("/seller/getProds")
     fun getProductList():Call<List<ProductData>>
+
+    @GET("/shop/viewOneShop/{shopId}")
+    fun getShopDetails(@Path("shopId") shopId: Int): Call<ShopResult>
+
+    @FormUrlEncoded
+    @POST("/auth/changePass")
+    fun changePass(
+        @Field("email") email: String,
+        @Field("password") oldPass: String,
+        @Field("newpass") newPass: String
+    ): Call<Message>
 }

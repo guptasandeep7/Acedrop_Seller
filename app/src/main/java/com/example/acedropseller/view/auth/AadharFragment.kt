@@ -1,6 +1,7 @@
 package com.example.acedropseller.view.auth
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -14,9 +15,9 @@ import androidx.navigation.fragment.findNavController
 import com.example.acedropseller.R
 import com.example.acedropseller.databinding.FragmentAadharBinding
 import com.example.acedropseller.model.Message
-import com.example.acedropseller.model.ShopDetails
 import com.example.acedropseller.network.ServiceBuilder
 import com.example.acedropseller.repository.Datastore
+import com.example.acedropseller.utill.ProgressDialog
 import com.example.acedropseller.utill.generateToken
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.launch
@@ -34,6 +35,7 @@ class AadharFragment : androidx.fragment.app.Fragment() {
     private val BACK_IMAGE_REQUEST = 202
     private var frontFilePath: Uri? = null
     private var backFilePath: Uri? = null
+    lateinit var dialog: Dialog
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -41,6 +43,8 @@ class AadharFragment : androidx.fragment.app.Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentAadharBinding.inflate(inflater, container, false)
         val view = binding.root
+
+        dialog = ProgressDialog.progressDialog(requireContext())
 
         binding.frontButton.setOnClickListener {
             val intent = Intent()
@@ -66,38 +70,42 @@ class AadharFragment : androidx.fragment.app.Fragment() {
             binding.frontButton.isEnabled = false
             binding.backButton.isEnabled = false
             it.isEnabled = false
-            binding.progressBar.visibility = View.VISIBLE
-            val images = arrayOf<String>()
+            dialog.show()
+            val images = mutableListOf<String>()
             val photoRef =
                 FirebaseStorage.getInstance().reference.child("Aadhar/${frontFilePath?.lastPathSegment}")
             photoRef.putFile(frontFilePath!!).addOnSuccessListener {
                 it.storage.downloadUrl.addOnSuccessListener { uri ->
-                    images[0] = uri.toString()
+                    images.add(uri.toString())
                     val photoRe =
                         FirebaseStorage.getInstance().reference.child("Aadhar/${backFilePath?.lastPathSegment}")
                     photoRe.putFile(backFilePath!!).addOnSuccessListener {
                         it.storage.downloadUrl.addOnSuccessListener { uri ->
-                            images[1] = uri.toString()
+                            images.add(uri.toString())
                             lifecycleScope.launch {
                                 uploadAadhar(images = images)
                             }
-                            binding.progressBar.visibility = View.GONE
-                            binding.uploadBtn.isEnabled = true
-                            binding.frontButton.isEnabled = true
-                            binding.backButton.isEnabled = true
                         }
                     }.addOnFailureListener {
                         Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                        dialog.cancel()
+                        binding.uploadBtn.isEnabled = true
+                        binding.frontButton.isEnabled = true
+                        binding.backButton.isEnabled = true
                     }
                 }
             }.addOnFailureListener { it ->
+                dialog.cancel()
+                binding.uploadBtn.isEnabled = true
+                binding.frontButton.isEnabled = true
+                binding.backButton.isEnabled = true
                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
             }
         }
         return view
     }
 
-    private suspend fun uploadAadhar(images: Array<String>) {
+    private suspend fun uploadAadhar(images: MutableList<String>) {
         val token = Datastore(requireContext()).getUserDetails(Datastore.ACCESS_TOKEN_KEY)
         ServiceBuilder.buildService(token = token).uploadAadhar(images = images)
             .enqueue(object : Callback<Message?> {
@@ -110,7 +118,7 @@ class AadharFragment : androidx.fragment.app.Fragment() {
                                 Toast.LENGTH_SHORT
                             )
                                 .show()
-                            binding.progressBar.visibility = View.GONE
+                            dialog.cancel()
                             binding.uploadBtn.isEnabled = true
                             binding.frontButton.isEnabled = true
                             binding.backButton.isEnabled = true
@@ -133,18 +141,23 @@ class AadharFragment : androidx.fragment.app.Fragment() {
                                 response.body()?.toString() ?: "Try Again",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            dialog.cancel()
+                            binding.uploadBtn.isEnabled = true
+                            binding.frontButton.isEnabled = true
+                            binding.backButton.isEnabled = true
                         }
                     }
                 }
 
                 override fun onFailure(call: Call<Message?>, t: Throwable) {
+                    dialog.cancel()
+                    binding.uploadBtn.isEnabled = true
+                    binding.frontButton.isEnabled = true
+                    binding.backButton.isEnabled = true
                     Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
                 }
             })
-        binding.progressBar.visibility = View.GONE
-        binding.uploadBtn.isEnabled = true
-        binding.frontButton.isEnabled = true
-        binding.backButton.isEnabled = true
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -166,6 +179,14 @@ class AadharFragment : androidx.fragment.app.Fragment() {
             } catch (e: IOException) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            Datastore(requireContext()).changeLoginState(false)
         }
     }
 

@@ -19,7 +19,11 @@ class Datastore(context: Context) {
     companion object {
         const val LOGIN_KEY = "login_key"
         const val NAME_KEY = "name_key"
+        const val SHOP_NAME_KEY = "shop_name_key"
+        const val DESC_KEY = "desc_key"
+        const val PHN_KEY = "phn_key"
         const val EMAIL_KEY = "email_key"
+        const val IMAGE_URL = "email_url"
         const val ACCESS_TOKEN_KEY = "token_key"
         const val REF_TOKEN_KEY = "ref_token_key"
         const val ID = "seller_id"

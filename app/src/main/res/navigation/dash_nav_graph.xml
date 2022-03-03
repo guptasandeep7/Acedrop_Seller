@@ -20,7 +20,14 @@
         android:id="@+id/profileFragment"
         android:name="com.example.acedropseller.view.dash.ProfileFragment"
         android:label="fragment_profile"
-        tools:layout="@layout/fragment_profile" />
+        tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_profileFragment_to_authActivity"
+            app:destination="@id/authActivity" />
+        <action
+            android:id="@+id/action_profileFragment_to_changePasswordFragment"
+            app:destination="@id/changePasswordFragment" />
+    </fragment>
     <activity
         android:id="@+id/authActivity"
         android:name="com.example.acedropseller.view.auth.AuthActivity"
@@ -40,4 +47,17 @@
         android:name="com.example.acedropseller.view.dash.UploadProductFragment"
         android:label="fragment_upload_product"
         tools:layout="@layout/fragment_upload_product" />
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.example.acedropseller.view.dash.ChangePasswordFragment"
+        android:label="ChangePasswordFragment"
+        tools:layout="@layout/fragment_change_password">
+        <action
+            android:id="@+id/action_changePasswordFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/updateDetails"
+        android:name="com.example.acedropseller.view.dash.UpdateDetails"
+        android:label="UpdateDetails" />
 </navigation>

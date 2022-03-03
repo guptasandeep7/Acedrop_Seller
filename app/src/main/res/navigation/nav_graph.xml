@@ -141,6 +141,18 @@
         <action
             android:id="@+id/action_sellerPhotoFragment_to_dashboardActivity"
             app:destination="@id/dashboardActivity" />
+        <action
+            android:id="@+id/action_sellerPhotoFragment_to_shopPhotoFragment"
+            app:destination="@id/shopPhotoFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/shopPhotoFragment"
+        android:name="com.example.acedropseller.view.auth.ShopPhotoFragment"
+        android:label="ShopPhotoFragment"
+        tools:layout="@layout/fragment_shop_photo">
+        <action
+            android:id="@+id/action_shopPhotoFragment_to_dashboardActivity"
+            app:destination="@id/dashboardActivity" />
     </fragment>
 
 </navigation>

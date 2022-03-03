@@ -60,6 +60,19 @@
     <string name="rejected">Rejected</string>
     <string name="update">Update</string>
     <string name="your_items">Your items</string>
+    <string name="owner_full_name">Owner full name</string>
+    <string name="upload_shop_picture">Upload Shop Picture</string>
+    <string name="click_to_upload_shop_photo">Click to upload Shop photo</string>
+    <string name="owner">Owner</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="add_change_cover_image">Add/Change Cover Image</string>
+    <string name="change_password">Change Password</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="edit_details">Edit Details</string>
+    <string name="shop_default_image"><![CDATA[https://firebasestorage.googleapis.com/v0/b/acedrop-seller-1640952554752.appspot.com/o/Shop%2Fclipart1325053.png?alt=media&token=6cefe4ef-8b6b-420c-8224-361c8b97cd71]]></string>
+    <string name="orders_dispatched">Orders Dispatched</string>
+    <string name="orders_recieved">Orders Recieved</string>
+    <string name="_0">0</string>
     <string-array name="category_array">
         <item>@string/category</item>
         <item>Jewellery</item>

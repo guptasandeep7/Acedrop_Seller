@@ -1,9 +1,11 @@
 package com.example.acedropseller.view.auth
 
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,12 +16,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.acedropseller.R
 import com.example.acedropseller.databinding.FragmentPersonalDetailsBinding
-import com.example.acedropseller.model.BusinessDetails
 import com.example.acedropseller.model.Message
 import com.example.acedropseller.model.ShopDetails
 import com.example.acedropseller.network.ServiceBuilder
 import com.example.acedropseller.repository.Datastore
+import com.example.acedropseller.utill.ProgressDialog
 import com.example.acedropseller.utill.generateToken
+import com.example.acedropseller.view.auth.BusinessDetailsFragment.Companion.businessDetails
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import retrofit2.Call
@@ -37,14 +40,16 @@ class PersonalDetailsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
     private var day: Int = 0
     private var month: Int = 0
     private var year: Int = 0
-    lateinit var dob: String
+    private var dob: String? = null
+    lateinit var dialog:Dialog
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+    ): View {
         _binding = FragmentPersonalDetailsBinding.inflate(inflater, container, false)
         val view = binding.root
+
+        dialog = ProgressDialog.progressDialog(requireContext())
 
         binding.dobBtn.setOnClickListener {
             val calendar: Calendar = Calendar.getInstance()
@@ -82,6 +87,10 @@ class PersonalDetailsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
                 binding.fatherNameLayout.helperText = "Enter Father's name"
                 false
             }
+            dob.isNullOrBlank() -> {
+                Toast.makeText(requireContext(), "Please enter date of birth", Toast.LENGTH_SHORT).show()
+                false
+            }
             else -> true
         }
     }
@@ -95,31 +104,30 @@ class PersonalDetailsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.next_btn -> {
-                binding.progressBar.visibility = View.VISIBLE
+                dialog.show()
                 binding.nextBtn.isEnabled = false
                 val phnNumber = binding.phoneNumber.text.toString().trim()
                 val aadhaarNo = binding.aadharNumber.text.toString().trim()
                 val fName = binding.fatherName.text.toString().trim()
                 helper()
                 if (isValid(phnNumber, aadhaarNo, fName)) {
-                    val businessDetails =
-                        arguments?.getSerializable("BusinessDetails") as BusinessDetails
+
                     lifecycleScope.launch {
                         createShop(
                             businessDetails.shopName!!,
-                            phnNumber,
-                            businessDetails.member!!,
+                            phnNumber.toLong(),
+                            businessDetails.member!!.toInt(),
                             businessDetails.desc!!,
                             businessDetails.address!!,
                             fName,
-                            aadhaarNo,
-                            dob,
+                            aadhaarNo.toLong(),
+                            dob!!,
                             context = requireContext()
                         )
                     }
                 } else {
                     binding.nextBtn.isEnabled = true
-                    binding.progressBar.visibility = View.GONE
+                    dialog.cancel()
                 }
             }
         }
@@ -127,16 +135,17 @@ class PersonalDetailsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
 
     private suspend fun createShop(
         shopName: String,
-        phno: String,
-        noOfMembers: String,
+        phno: Long,
+        noOfMembers: Int,
         desc: String,
         address: String,
         fName: String,
-        aadhaarNo: String,
+        aadhaarNo: Long,
         dob: String,
         context: Context
     ) {
         val token = Datastore(context).getUserDetails(Datastore.ACCESS_TOKEN_KEY)
+        Log.w("PERSONAL ACC TOKEN", "createShop: $token", )
         val request = ServiceBuilder.buildService(token)
         val call = request.createShop(
             ShopDetails(
@@ -154,7 +163,7 @@ class PersonalDetailsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
             override fun onResponse(call: Call<Message?>, response: Response<Message?>) {
                 when {
                     response.isSuccessful -> {
-                        binding.progressBar.visibility = View.GONE
+                        dialog.cancel()
                         findNavController().navigate(R.id.action_personalDetails_to_aadharFragment)
                     }
                     response.code() == 404 -> errorMessage("Shop does not exists")
@@ -183,7 +192,7 @@ class PersonalDetailsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
                             )
                         }
                     }
-                    else -> errorMessage("Something went wrong! Try again")
+                    else -> errorMessage(response.code().toString())
                 }
             }
 
@@ -195,8 +204,8 @@ class PersonalDetailsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
     }
 
     fun errorMessage(errorMessage: String) {
+        dialog.cancel()
         Toast.makeText(this.context, errorMessage, Toast.LENGTH_SHORT).show()
-        binding.progressBar.visibility = View.GONE
         binding.nextBtn.isEnabled = true
     }
 

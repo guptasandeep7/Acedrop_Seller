@@ -11,11 +11,12 @@ import kotlinx.coroutines.launch
 
 class ProductViewModel : ViewModel() {
 
-    private var productList = MutableLiveData<ApiResponse<List<ProductData>>>()
+    private var productList: MutableLiveData<ApiResponse<List<ProductData>>>? = null
 
-    fun getProductList(context: Context): MutableLiveData<ApiResponse<List<ProductData>>> {
+    fun getProductList(context: Context): MutableLiveData<ApiResponse<List<ProductData>>>? {
         viewModelScope.launch {
-            productList = ProductRepository().getData(context)
+            if (productList?.value?.data == null)
+                productList = ProductRepository().getData(context)
         }
         return productList
     }

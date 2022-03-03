@@ -1,6 +1,7 @@
 package com.example.acedropseller.model
 
 import com.example.acedropseller.model.home.ImgUrl
+import java.io.Serializable
 
 data class ProductData(
     val basePrice: Int,
@@ -15,4 +16,4 @@ data class ProductData(
     val stock: Int,
     val title: String,
     val updatedAt: String
-)
+):Serializable

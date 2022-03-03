@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -44,7 +45,11 @@ class ItemsFragment : Fragment() {
                 if (SystemClock.elapsedRealtime() - mLastClickTime < 500) {
                     return
                 } else {
-                    // update product
+                    val bundle = bundleOf("ProductDetails" to productAdapter.productList[position])
+                    findNavController().navigate(
+                        R.id.action_itemsFragment_to_uploadProductFragment,
+                        bundle
+                    )
                 }
 
             }
@@ -52,7 +57,7 @@ class ItemsFragment : Fragment() {
     }
 
     private fun getProductList() {
-        productViewModel.getProductList(requireContext()).observe(viewLifecycleOwner, {
+        productViewModel.getProductList(requireContext())?.observe(viewLifecycleOwner) {
             when (it) {
                 is ApiResponse.Success -> {
                     binding.progressBar.visibility = View.GONE
@@ -65,6 +70,6 @@ class ItemsFragment : Fragment() {
                     Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_SHORT).show()
                 }
             }
-        })
+        }
     }
 }

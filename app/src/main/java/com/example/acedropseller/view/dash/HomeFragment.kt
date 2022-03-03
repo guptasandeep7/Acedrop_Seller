@@ -33,7 +33,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
     private val homeViewModel: HomeViewModel by activityViewModels()
     private var homeAdapter = HomeAdapter()
-    lateinit var dialog:Dialog
+    lateinit var dialog: Dialog
     private var mLastClickTime = 0
 
     override fun onCreateView(
@@ -89,7 +89,7 @@ class HomeFragment : Fragment() {
             .setPositiveButton("Accept") { _, _ ->
                 acceptOrder(id)
             }
-            .setNeutralButton("Cancel") { dialog, _ -> dialog.dismiss()}
+            .setNeutralButton("Cancel") { dialog, _ -> dialog.dismiss() }
         val exit = builder.create()
         exit.show()
     }
@@ -101,14 +101,14 @@ class HomeFragment : Fragment() {
             .setPositiveButton("Reject") { _, _ ->
                 rejectOrder(id)
             }
-            .setNeutralButton("Back") { dialog, _ -> dialog.dismiss()}
+            .setNeutralButton("Back") { dialog, _ -> dialog.dismiss() }
         val exit = builder.create()
         exit.show()
     }
 
     private fun acceptOrder(id: Int) {
-        homeViewModel.acceptOrder(id,requireContext()).observe(viewLifecycleOwner, {
-            when(it){
+        homeViewModel.acceptOrder(id, requireContext()).observe(viewLifecycleOwner) {
+            when (it) {
                 is ApiResponse.Success -> {
                     dialog.cancel()
                     resultDialog(R.layout.accepted_dialog)
@@ -121,12 +121,12 @@ class HomeFragment : Fragment() {
                     Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_SHORT).show()
                 }
             }
-        })
+        }
     }
 
     private fun rejectOrder(id: Int) {
-        homeViewModel.rejectOrder(id,requireContext()).observe(viewLifecycleOwner, {
-            when(it){
+        homeViewModel.rejectOrder(id, requireContext()).observe(viewLifecycleOwner) {
+            when (it) {
                 is ApiResponse.Success -> {
                     dialog.cancel()
                     resultDialog(R.layout.rejected_dialog)
@@ -139,10 +139,10 @@ class HomeFragment : Fragment() {
                     Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_SHORT).show()
                 }
             }
-        })
+        }
     }
 
-    private fun resultDialog(layout:Int) {
+    private fun resultDialog(layout: Int) {
         val dialog = Dialog(requireContext())
         dialog.setContentView(layout)
         dialog.setCancelable(true)
@@ -159,7 +159,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun getHomeData() {
-        homeViewModel.getHomeData(requireContext()).observe(viewLifecycleOwner, {
+        homeViewModel.getHomeData(requireContext()).observe(viewLifecycleOwner) {
             when (it) {
                 is ApiResponse.Success -> {
                     binding.progressBar.visibility = View.GONE
@@ -173,7 +173,7 @@ class HomeFragment : Fragment() {
                     Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_SHORT).show()
                 }
             }
-        })
+        }
     }
 
     private fun changeOrderList(homeItems: List<HomeItem>): MutableList<HomeItem> {

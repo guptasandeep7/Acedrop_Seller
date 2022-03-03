@@ -84,10 +84,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)
         }
@@ -187,8 +184,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
         if (isValid(email, pass)) {
             progressBar.visibility = View.VISIBLE
             loginApi(email = email, pass = pass)
-        }
-        else binding.signinBtn.isEnabled = true
+        } else binding.signinBtn.isEnabled = true
     }
 
     private fun loginApi(email: String, pass: String) {
@@ -199,15 +195,18 @@ class LoginFragment : Fragment(), View.OnClickListener {
                 when {
                     response.isSuccessful -> {
                         val responseBody = response.body()!!
-                        runBlocking {
-                            datastore.saveToDatastore(responseBody, requireContext())
-                            binding.progressBar.visibility = View.GONE
-                            if(responseBody.status==3){
-                                activity?.finish()
-                                findNavController().navigate(R.id.action_loginFragment_to_dashboardActivity)
-                            }
-                            else{
-                                responseBody.status?.let { checkStatus(it) }
+                        if (responseBody.status == -1) {
+                            errorMessage("Invalid Email Id")
+                        } else {
+                            runBlocking {
+                                datastore.saveToDatastore(responseBody, requireContext())
+                                binding.progressBar.visibility = View.GONE
+                                if (responseBody.status == 3) {
+                                    activity?.finish()
+                                    findNavController().navigate(R.id.action_loginFragment_to_dashboardActivity)
+                                } else {
+                                    responseBody.status?.let { checkStatus(it) }
+                                }
                             }
                         }
                     }
@@ -231,16 +230,18 @@ class LoginFragment : Fragment(), View.OnClickListener {
                 Toast.makeText(requireContext(), "Business Details Pending", Toast.LENGTH_SHORT)
                     .show()
             }
-            -1 -> Toast.makeText(requireContext(), "Invalid Email/Password", Toast.LENGTH_SHORT)
-                .show()
             2 -> {
                 findNavController().navigate(R.id.action_loginFragment_to_sellerPhotoFragment)
-                Toast.makeText(requireContext(), "Upload seller pic pending", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    requireContext(),
+                    "Upload seller picture pending",
+                    Toast.LENGTH_SHORT
+                )
                     .show()
             }
             1 -> {
                 findNavController().navigate(R.id.action_loginFragment_to_aadharFragment)
-                Toast.makeText(requireContext(), "upload Aadhar pic", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Upload Aadhar picture", Toast.LENGTH_SHORT).show()
             }
         }
     }

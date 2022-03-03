@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.acedropseller.R
 import com.example.acedropseller.databinding.FragmentSellerPhotoBinding
+import com.example.acedropseller.databinding.FragmentShopPhotoBinding
 import com.example.acedropseller.model.Message
 import com.example.acedropseller.network.ServiceBuilder
 import com.example.acedropseller.repository.Datastore
@@ -28,8 +29,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.IOException
 
-class SellerPhotoFragment : Fragment() {
-    private var _binding: FragmentSellerPhotoBinding? = null
+class ShopPhotoFragment : Fragment() {
+    private var _binding: FragmentShopPhotoBinding? = null
     private val binding get() = _binding!!
     private val IMAGE_REQUEST = 101
     private var filePath: Uri? = null
@@ -38,9 +39,9 @@ class SellerPhotoFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
-        _binding = FragmentSellerPhotoBinding.inflate(inflater, container, false)
+        _binding = FragmentShopPhotoBinding.inflate(inflater, container, false)
         val view = binding.root
 
         dialog = ProgressDialog.progressDialog(requireContext())
@@ -60,34 +61,36 @@ class SellerPhotoFragment : Fragment() {
             it.isEnabled = false
             binding.uploadImageButton.isEnabled = false
             val photoRef =
-                FirebaseStorage.getInstance().reference.child("Aadhar/${filePath?.lastPathSegment}")
+                FirebaseStorage.getInstance().reference.child("Shop/${filePath?.lastPathSegment}")
             photoRef.putFile(filePath!!).addOnSuccessListener {
                 it.storage.downloadUrl.addOnSuccessListener { uri ->
                     lifecycleScope.launch {
                         uploadSellerImage(image = uri.toString())
                     }
+                    dialog.cancel()
+                    binding.uploadBtn.isEnabled = true
+                    binding.uploadImageButton.isEnabled = true
                 }
             }.addOnFailureListener {
                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
-                dialog.cancel()
-                binding.uploadBtn.isEnabled = true
-                binding.uploadImageButton.isEnabled = true
             }
-
+            dialog.cancel()
+            it.isEnabled = true
+            binding.uploadImageButton.isEnabled = true
         }
         return view
     }
 
     private suspend fun uploadSellerImage(image: String) {
         val token = Datastore(requireContext()).getUserDetails(Datastore.ACCESS_TOKEN_KEY)
-        ServiceBuilder.buildService(token = token).uploadSellerPhoto(image = image)
+        ServiceBuilder.buildService(token = token).uploadShopPhoto(image = image)
             .enqueue(object : Callback<Message?> {
                 override fun onResponse(call: Call<Message?>, response: Response<Message?>) {
                     when {
                         response.isSuccessful -> {
                             Toast.makeText(
                                 requireContext(),
-                                "User photo uploaded successfully",
+                                "Shop photo uploaded successfully",
                                 Toast.LENGTH_SHORT
                             )
                                 .show()
@@ -97,7 +100,8 @@ class SellerPhotoFragment : Fragment() {
                                 dialog.cancel()
                                 binding.uploadBtn.isEnabled = true
                                 binding.uploadImageButton.isEnabled = true
-                                findNavController().navigate(R.id.action_sellerPhotoFragment_to_shopPhotoFragment)
+                                activity?.finish()
+                                findNavController().navigate(R.id.action_shopPhotoFragment_to_dashboardActivity)
                             }
                         }
                         response.code() == 403 -> {

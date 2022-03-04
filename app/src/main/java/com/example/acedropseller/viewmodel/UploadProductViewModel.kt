@@ -23,10 +23,23 @@ class UploadProductViewModel : ViewModel() {
     var offer: String?=null
     var category: String? =null
     var prodId: Int? = -1
-    lateinit var pastImgUrls: List<ImgUrl>
+    var prevImages = mutableListOf<ImgUrl>()
 
     private var _result: MutableLiveData<ApiResponse<ResponseBody>> = MutableLiveData()
 
+    fun clearData(){
+        productName=null
+        productDesc=null
+        shortDesc=null
+        quantity=null
+        images = mutableListOf()
+        basePrice=null
+        discPrice=null
+        offer=null
+        category =null
+        prodId = -1
+        prevImages = mutableListOf()
+    }
     fun uploadProduct(context: Context): MutableLiveData<ApiResponse<ResponseBody>> {
 
         discPrice = basePrice!!.toInt() * (100 - offer!!.toInt())/100

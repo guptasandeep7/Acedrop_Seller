@@ -67,16 +67,13 @@ class ShopPhotoFragment : Fragment() {
                     lifecycleScope.launch {
                         uploadSellerImage(image = uri.toString())
                     }
-                    dialog.cancel()
-                    binding.uploadBtn.isEnabled = true
-                    binding.uploadImageButton.isEnabled = true
                 }
             }.addOnFailureListener {
                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                dialog.cancel()
+                binding.uploadBtn.isEnabled = true
+                binding.uploadImageButton.isEnabled = true
             }
-            dialog.cancel()
-            it.isEnabled = true
-            binding.uploadImageButton.isEnabled = true
         }
         return view
     }

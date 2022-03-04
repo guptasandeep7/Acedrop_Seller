@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.acedropseller.R
 import com.example.acedropseller.databinding.FragmentUploadProductBinding
 import com.example.acedropseller.model.ProductData
+import com.example.acedropseller.model.home.ImgUrl
 import com.example.acedropseller.network.ApiResponse
 import com.example.acedropseller.utill.ProgressDialog
 import com.example.acedropseller.view.auth.AuthActivity
@@ -46,6 +47,9 @@ class UploadProductFragment : Fragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         dialog = ProgressDialog.progressDialog(requireContext())
+
+        if(lastFragment==null)
+        uploadProductViewModel.clearData()
 
         binding.viewmodel = uploadProductViewModel
 
@@ -118,21 +122,25 @@ class UploadProductFragment : Fragment(), View.OnClickListener {
             R.id.add_product_btn -> {
                 helper()
                 if (validDetails()) {
-                    k = 0
-                    dialog.show()
-                    if (lastFragment != null && imageUriList.isNullOrEmpty()) {
-                        uploadProductViewModel.pastImgUrls.forEach {
-                            uploadProductViewModel.images.add(it.imageUrl)
+                    if (lastFragment != null && (imageUriList.filterNotNull()
+                            .isEmpty() && uploadProductViewModel.prevImages.isNotEmpty())
+                    ) {
+                        dialog.show()
+                        uploadProductViewModel.prevImages.forEachIndexed { index, imgUrl ->
+                            uploadProductViewModel.images.add(imgUrl.imageUrl)
+                            if (index == uploadProductViewModel.prevImages.size - 1)
+                                uploadProduct()
                         }
-                        uploadProduct()
                     } else {
-                        if (imageUriList.filterNotNull().isEmpty())
+                        if (imageUriList.filterNotNull().isEmpty()) {
                             Toast.makeText(
                                 requireContext(),
                                 "Please select image",
                                 Toast.LENGTH_SHORT
                             ).show()
-                        else {
+                        } else {
+                            k = 0
+                            dialog.show()
                             imageUriList = imageUriList.filterNotNull().toTypedArray()
                             imageUriList[k]?.let { uploadImagesToFirebase(it) }
                         }
@@ -298,7 +306,7 @@ class UploadProductFragment : Fragment(), View.OnClickListener {
             uploadProductViewModel.basePrice = product.basePrice.toString()
             uploadProductViewModel.discPrice = product.discountedPrice
             uploadProductViewModel.offer = product.offers
-            uploadProductViewModel.pastImgUrls = product.imgUrls
+            uploadProductViewModel.prevImages = product.imgUrls as MutableList<ImgUrl>
             uploadProductViewModel.prodId = product.id
         }
     }

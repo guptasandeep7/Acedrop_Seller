@@ -48,8 +48,8 @@ class UploadProductFragment : Fragment(), View.OnClickListener {
 
         dialog = ProgressDialog.progressDialog(requireContext())
 
-        if(lastFragment==null)
-        uploadProductViewModel.clearData()
+        if (lastFragment == null)
+            uploadProductViewModel.clearData()
 
         binding.viewmodel = uploadProductViewModel
 

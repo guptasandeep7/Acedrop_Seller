@@ -81,4 +81,14 @@ interface ApiInterface {
         @Field("password") oldPass: String,
         @Field("newpass") newPass: String
     ): Call<Message>
+
+    @FormUrlEncoded
+    @POST("/seller/updateShop")
+    fun updateShopDetails(
+        @Field("shopName") shopName: String,
+        @Field("phno") phno: String,
+        @Field("noOfMembers") noOfMembers: String,
+        @Field("description") description: String,
+        @Field("address") address: String,
+    ): Call<ResponseBody>
 }

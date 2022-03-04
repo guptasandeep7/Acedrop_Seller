@@ -7,6 +7,6 @@ data class ShopDetails(
     val description: String,
     val address: String,
     val fathersName: String,
-    val aadhaarNo: Long,
+    val aadhaarNo: String,
     val dob: String
 )

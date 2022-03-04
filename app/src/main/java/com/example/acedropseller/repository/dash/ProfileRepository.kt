@@ -2,6 +2,7 @@ package com.example.acedropseller.repository.dash
 
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
+import com.example.acedropseller.model.Message
 import com.example.acedropseller.model.dash.ShopResult
 import com.example.acedropseller.network.ApiResponse
 import com.example.acedropseller.network.ServiceBuilder
@@ -11,6 +12,7 @@ import com.example.acedropseller.repository.Datastore.Companion.REF_TOKEN_KEY
 import com.example.acedropseller.utill.generateToken
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -18,6 +20,7 @@ import retrofit2.Response
 class ProfileRepository {
 
     private val data = MutableLiveData<ApiResponse<ShopResult>>()
+    private val updateData = MutableLiveData<ApiResponse<ResponseBody>>()
 
     suspend fun getShopDetails(
         shopId: Int,
@@ -59,5 +62,63 @@ class ProfileRepository {
         }
         return data
     }
+
+
+    suspend fun updateShopDetails(
+        shopName: String,
+        phno: String,
+        noOfMembers: String,
+        description: String,
+        address: String,
+        context: Context
+    ): MutableLiveData<ApiResponse<ResponseBody>> {
+
+        val token = Datastore(context).getUserDetails(ACCESS_TOKEN_KEY)
+        val call = ServiceBuilder.buildService(token)
+            .updateShopDetails(shopName, phno, noOfMembers, description, address)
+        updateData.postValue(ApiResponse.Loading())
+        try {
+            call.enqueue(object : Callback<ResponseBody?> {
+                override fun onResponse(
+                    call: Call<ResponseBody?>,
+                    response: Response<ResponseBody?>
+                ) {
+                    when {
+                        response.isSuccessful ->
+                            updateData.postValue(ApiResponse.Success(response.body()))
+
+                        response.code() == 403 || response.code() == 402 -> {
+                            GlobalScope.launch {
+                                generateToken(
+                                    token!!,
+                                    Datastore(context).getUserDetails(
+                                        REF_TOKEN_KEY
+                                    )!!, context
+                                )
+                                updateShopDetails(
+                                    shopName,
+                                    phno,
+                                    noOfMembers,
+                                    description,
+                                    address,
+                                    context
+                                )
+                            }
+                        }
+                        else ->
+                            updateData.postValue(ApiResponse.Error(response.message()))
+                    }
+                }
+
+                override fun onFailure(call: Call<ResponseBody?>, t: Throwable) {
+                    updateData.postValue(ApiResponse.Error("Something went wrong!! ${t.message}"))
+                }
+            })
+        } catch (e: Exception) {
+            updateData.postValue(ApiResponse.Error(e.message))
+        }
+        return updateData
+    }
+
 
 }

@@ -22,10 +22,12 @@ import com.example.acedropseller.model.Message
 import com.example.acedropseller.network.ApiResponse
 import com.example.acedropseller.network.ServiceBuilder
 import com.example.acedropseller.repository.Datastore
+import com.example.acedropseller.repository.Datastore.Companion.ADDRESS_KEY
 import com.example.acedropseller.repository.Datastore.Companion.DESC_KEY
 import com.example.acedropseller.repository.Datastore.Companion.EMAIL_KEY
 import com.example.acedropseller.repository.Datastore.Companion.IMAGE_URL
 import com.example.acedropseller.repository.Datastore.Companion.NAME_KEY
+import com.example.acedropseller.repository.Datastore.Companion.NO_OF_MEMBERS
 import com.example.acedropseller.repository.Datastore.Companion.PHN_KEY
 import com.example.acedropseller.repository.Datastore.Companion.SHOP_NAME_KEY
 import com.example.acedropseller.repository.auth.SignOutRepository
@@ -143,6 +145,8 @@ class ProfileFragment : Fragment(), View.OnClickListener {
                             datastore.saveUserDetails(SHOP_NAME_KEY, it.data?.shopName)
                             datastore.saveUserDetails(DESC_KEY, it.data?.description)
                             datastore.saveUserDetails(PHN_KEY, it.data?.phno)
+                            datastore.saveUserDetails(ADDRESS_KEY, it.data?.address)
+                            datastore.saveUserDetails(NO_OF_MEMBERS, it.data?.noOfMembers.toString())
                             if (it.data?.imgUrls.isNullOrEmpty()) {
                                 datastore.saveUserDetails(
                                     IMAGE_URL,
@@ -291,6 +295,7 @@ class ProfileFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.change_pass_Button -> findNavController().navigate(R.id.action_profileFragment_to_changePasswordFragment)
+            R.id.edit_profile_btn -> findNavController().navigate(R.id.action_profileFragment_to_updateDetails)
         }
     }
 

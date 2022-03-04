@@ -120,7 +120,7 @@ class PersonalDetailsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
                             businessDetails.desc!!,
                             businessDetails.address!!,
                             fName,
-                            aadhaarNo.toLong(),
+                            aadhaarNo,
                             dob!!,
                             context = requireContext()
                         )
@@ -140,7 +140,7 @@ class PersonalDetailsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
         desc: String,
         address: String,
         fName: String,
-        aadhaarNo: Long,
+        aadhaarNo: String,
         dob: String,
         context: Context
     ) {

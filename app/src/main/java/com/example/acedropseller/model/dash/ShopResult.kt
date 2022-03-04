@@ -9,5 +9,7 @@ data class ShopResult(
     val imgUrls: List<ImgUrl>,
     val name: String,
     val phno: String,
-    val shopName: String
+    val shopName: String,
+    val noOfMembers:Int,
+    val address:String
 )

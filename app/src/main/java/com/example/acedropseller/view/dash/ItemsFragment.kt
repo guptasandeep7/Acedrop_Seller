@@ -64,7 +64,7 @@ class ItemsFragment : Fragment() {
                     it.data?.let { it1 -> productAdapter.updateProductList(it1) }
                     binding.itemsRv.adapter = productAdapter
                 }
-                is ApiResponse.Loading -> binding.progressBar.visibility = View.VISIBLE
+                is ApiResponse.Loading -> if (productViewModel.productList.value?.data.isNullOrEmpty())binding.progressBar.visibility = View.VISIBLE
                 is ApiResponse.Error -> {
                     binding.progressBar.visibility = View.GONE
                     Toast.makeText(requireContext(), it.errorMessage, Toast.LENGTH_SHORT).show()

@@ -18,7 +18,7 @@ class LandingFragment : Fragment() {
 
     private var _binding: FragmentLandingBinding? = null
     private val binding get() = _binding!!
-    lateinit var datastore: Datastore
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?

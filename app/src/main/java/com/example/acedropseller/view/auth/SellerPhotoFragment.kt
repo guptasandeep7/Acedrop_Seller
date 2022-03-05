@@ -1,6 +1,7 @@
 package com.example.acedropseller.view.auth
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -17,8 +18,11 @@ import com.example.acedropseller.databinding.FragmentSellerPhotoBinding
 import com.example.acedropseller.model.Message
 import com.example.acedropseller.network.ServiceBuilder
 import com.example.acedropseller.repository.Datastore
+import com.example.acedropseller.utill.ProgressDialog
+import com.example.acedropseller.utill.generateToken
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -30,6 +34,7 @@ class SellerPhotoFragment : Fragment() {
     private val IMAGE_REQUEST = 101
     private var filePath: Uri? = null
     lateinit var datastore: Datastore
+    lateinit var dialog:Dialog
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -37,6 +42,8 @@ class SellerPhotoFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentSellerPhotoBinding.inflate(inflater, container, false)
         val view = binding.root
+
+        dialog = ProgressDialog.progressDialog(requireContext())
 
         binding.uploadImageButton.setOnClickListener {
             val intent = Intent()
@@ -49,7 +56,7 @@ class SellerPhotoFragment : Fragment() {
         }
 
         binding.uploadBtn.setOnClickListener {
-            binding.progressBar.visibility = View.VISIBLE
+            dialog.show()
             it.isEnabled = false
             binding.uploadImageButton.isEnabled = false
             val photoRef =
@@ -59,16 +66,14 @@ class SellerPhotoFragment : Fragment() {
                     lifecycleScope.launch {
                         uploadSellerImage(image = uri.toString())
                     }
-                    binding.progressBar.visibility = View.GONE
-                    binding.uploadBtn.isEnabled = true
-                    binding.uploadImageButton.isEnabled = true
                 }
             }.addOnFailureListener {
                 Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                dialog.cancel()
+                binding.uploadBtn.isEnabled = true
+                binding.uploadImageButton.isEnabled = true
             }
-            binding.progressBar.visibility = View.GONE
-            it.isEnabled = true
-            binding.uploadImageButton.isEnabled = true
+
         }
         return view
     }
@@ -89,14 +94,27 @@ class SellerPhotoFragment : Fragment() {
                             datastore = Datastore(requireContext())
                             lifecycleScope.launch {
                                 datastore.changeLoginState(true)
-                                binding.progressBar.visibility = View.GONE
+                                dialog.cancel()
                                 binding.uploadBtn.isEnabled = true
                                 binding.uploadImageButton.isEnabled = true
-                                activity?.finish()
-                                findNavController().navigate(R.id.action_sellerPhotoFragment_to_dashboardActivity)
+                                findNavController().navigate(R.id.action_sellerPhotoFragment_to_shopPhotoFragment)
+                            }
+                        }
+                        response.code() == 403 -> {
+                            runBlocking {
+                                generateToken(
+                                    token!!,
+                                    Datastore(requireContext()).getUserDetails(
+                                        Datastore.REF_TOKEN_KEY
+                                    )!!, requireContext()
+                                )
+                                uploadSellerImage(image)
                             }
                         }
                         else -> {
+                            dialog.cancel()
+                            binding.uploadBtn.isEnabled = true
+                            binding.uploadImageButton.isEnabled = true
                             Toast.makeText(
                                 requireContext(),
                                 response.body()?.toString() ?: response.message(),
@@ -107,12 +125,12 @@ class SellerPhotoFragment : Fragment() {
                 }
 
                 override fun onFailure(call: Call<Message?>, t: Throwable) {
+                    dialog.cancel()
+                    binding.uploadBtn.isEnabled = true
+                    binding.uploadImageButton.isEnabled = true
                     Toast.makeText(requireContext(), t.message, Toast.LENGTH_SHORT).show()
                 }
             })
-        binding.progressBar.visibility = View.GONE
-        binding.uploadBtn.isEnabled = true
-        binding.uploadImageButton.isEnabled = true
     }
 
 
@@ -132,6 +150,14 @@ class SellerPhotoFragment : Fragment() {
             } catch (e: IOException) {
                 e.printStackTrace()
             }
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            Datastore(requireContext()).changeLoginState(false)
         }
     }
 

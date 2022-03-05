@@ -1,0 +1,40 @@
+package com.example.acedropseller.adapter
+
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.databinding.BindingAdapter
+import coil.load
+import com.example.acedropseller.R
+import com.example.acedropseller.model.home.ImgUrl
+
+@BindingAdapter("imageFromUrl")
+fun ImageView.imageFromUrl(url: String?) {
+    if (url != null){
+        this.load(url) {
+            placeholder(R.drawable.ic_placeholder)
+            crossfade(true)
+        }
+    }
+    else{
+        this.setBackgroundResource(R.drawable.ic_placeholder)
+    }
+}
+
+@BindingAdapter("imageCheck")
+fun ImageView.imageCheck(imgUrl: List<ImgUrl>) {
+    try{
+        this.load(imgUrl[0].imageUrl) {
+            placeholder(R.drawable.ic_placeholder)
+            crossfade(true)
+        }
+    }catch (e:Exception){
+        this.setBackgroundResource(R.drawable.ic_placeholder)
+    }
+}
+
+@BindingAdapter("toStringText")
+fun TextView.toStringText(long: Long) {
+    this.text = "${resources.getString(R.string.Rs)}$long"
+}
+
+

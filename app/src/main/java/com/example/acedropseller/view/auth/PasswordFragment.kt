@@ -9,14 +9,18 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.acedropseller.R
 import com.example.acedropseller.databinding.FragmentPasswordBinding
-import com.example.acedropseller.repository.auth.PasswordRepository
+import com.example.acedropseller.model.Message
+import com.example.acedropseller.model.UserData
+import com.example.acedropseller.network.ServiceBuilder
 import com.example.acedropseller.utill.validPass
 import com.example.acedropseller.view.auth.SignupFragment.Companion.Email
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class PasswordFragment : Fragment() {
     private var _binding: FragmentPasswordBinding? = null
     private val binding get() = _binding!!
-    private lateinit var passwordRepository: PasswordRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -50,19 +54,34 @@ class PasswordFragment : Fragment() {
     }
 
     private fun signIn(pass: String) {
-        passwordRepository = PasswordRepository()
         binding.progressBar.visibility = View.VISIBLE
-        passwordRepository.newPass(Email, pass = pass)
+        newPass(Email, pass = pass)
+    }
 
-        passwordRepository.message.observe(viewLifecycleOwner, {
-            findNavController().navigate(R.id.action_passwordFragment_to_loginFragment)
-        })
+    private fun newPass(email: String, pass: String) {
+        val request = ServiceBuilder.buildService()
+        val call = request.newPass(UserData(email = email, newpass = pass))
+        call.enqueue(object : Callback<Message?> {
+            override fun onResponse(call: Call<Message?>, response: Response<Message?>) {
+                when {
+                    response.isSuccessful -> findNavController().navigate(R.id.action_passwordFragment_to_loginFragment)
+                    response.code() == 422 -> errorMessage("Enter valid password")
+                    response.code() == 401 -> errorMessage("Session expired")
+                    response.code() == 400 -> errorMessage("Try again")
+                    else -> errorMessage("Something went wrong! Try again")
+                }
+            }
 
-        passwordRepository.errorMessage.observe(viewLifecycleOwner, {
-            binding.progressBar.visibility = View.GONE
-            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-            binding.signBtn.isEnabled = true
+            override fun onFailure(call: Call<Message?>, t: Throwable) {
+                errorMessage(t.message.toString())
+            }
         })
+    }
+
+    private fun errorMessage(it: String) {
+        binding.progressBar.visibility = View.GONE
+        Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+        binding.signBtn.isEnabled = true
     }
 
     override fun onDestroyView() {

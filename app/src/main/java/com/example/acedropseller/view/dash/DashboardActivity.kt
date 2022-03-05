@@ -2,17 +2,24 @@ package com.example.acedropseller.view.dash
 
 import android.app.AlertDialog.Builder
 import android.os.Bundle
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.acedropseller.R
 import com.example.acedropseller.databinding.ActivityDashboardBinding
+import com.example.acedropseller.network.ApiResponse
+import com.example.acedropseller.repository.Datastore
+import com.example.acedropseller.viewmodel.ProfileViewModel
+import kotlinx.coroutines.launch
 
 class DashboardActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityDashboardBinding
+    private val profileViewModel: ProfileViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

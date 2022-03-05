@@ -9,5 +9,6 @@ data class UploadProduct(
     val images: List<String>,
     val offers: String,
     val stock: String,
-    val title: String
+    val title: String,
+    val newProd: Int
 )

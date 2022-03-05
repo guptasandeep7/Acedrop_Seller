@@ -9,32 +9,30 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.acedropseller.R
 import com.example.acedropseller.databinding.FragmentLoginBinding
+import com.example.acedropseller.model.Token
+import com.example.acedropseller.model.UserData
+import com.example.acedropseller.network.ServiceBuilder
 import com.example.acedropseller.repository.Datastore
-import com.example.acedropseller.repository.auth.GoogleSignRepository
-import com.example.acedropseller.repository.auth.LoginRepository
+import com.example.acedropseller.view.dash.DashboardActivity
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 
 class LoginFragment : Fragment(), View.OnClickListener {
 
-    companion object {
-        var TOKEN: String = ""
-    }
-
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
-    private lateinit var loginRepository: LoginRepository
-    private lateinit var googleSignRepository: GoogleSignRepository
     lateinit var datastore: Datastore
 
     //google sign in
@@ -49,6 +47,8 @@ class LoginFragment : Fragment(), View.OnClickListener {
     ): View {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
         val view = binding.root
+
+        datastore = Datastore(requireContext())
 
         binding.signinToSignup.setOnClickListener(this)
         binding.forgotTxt.setOnClickListener(this)
@@ -84,10 +84,7 @@ class LoginFragment : Fragment(), View.OnClickListener {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
-            // The Task returned from this call is always completed, no need to attach
-            // a listener.
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)
         }
@@ -96,11 +93,8 @@ class LoginFragment : Fragment(), View.OnClickListener {
     private fun handleSignInResult(completedTask: Task<GoogleSignInAccount>) {
         try {
             val account = completedTask.getResult(ApiException::class.java)
-            // Signed in successfully, show authenticated UI.
             updateUI(account)
         } catch (e: ApiException) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
             Log.w(TAG, "signInResult:failed code=${e.statusCode}")
             updateUI(null)
         }
@@ -109,32 +103,54 @@ class LoginFragment : Fragment(), View.OnClickListener {
     private fun updateUI(account: GoogleSignInAccount?) {
         if (account != null) {
             checkToken(account.idToken)
-        } else Toast.makeText(requireContext(), "Failed to sign with google", Toast.LENGTH_SHORT)
-            .show()
+        } else {
+            binding.progressBar.visibility = View.GONE
+            Toast.makeText(requireContext(), "Failed to sign with google", Toast.LENGTH_SHORT)
+                .show()
+        }
     }
 
     private fun checkToken(idToken: String?) {
-        googleSignRepository = GoogleSignRepository()
         if (idToken != null) {
-            googleSignRepository.gSignUp(idToken)
+            gSignUp(idToken)
         }
+    }
 
-        googleSignRepository.errorMessage.observe(viewLifecycleOwner, {
-            binding.progressBar.visibility = View.GONE
-            binding.signinBtn.isEnabled = true
-            Toast.makeText(this.context, it, Toast.LENGTH_SHORT).show()
-        })
+    fun gSignUp(idToken: String) {
+        val request = ServiceBuilder.buildService(null)
+        val call = request.gSignUp(Token(idToken))
+        call.enqueue(object : Callback<UserData?> {
+            override fun onResponse(call: Call<UserData?>, response: Response<UserData?>) {
+                when {
+                    response.isSuccessful -> {
+                        binding.progressBar.visibility = View.GONE
+                        runBlocking {
+                            response.body()
+                                ?.let { datastore.saveToDatastore(it, requireContext()) }
+                            binding.progressBar.visibility = View.GONE
+                            startActivity(Intent(activity, DashboardActivity::class.java))
+                            activity?.finish()
+                        }
+                    }
+                    response.code() == 503 -> errorMessage(response.message())
+                    else -> errorMessage(response.message())
+                }
+            }
 
-        googleSignRepository.userData.observe(viewLifecycleOwner, {
-            binding.progressBar.visibility = View.GONE
-            datastore = Datastore(requireContext())
-            lifecycleScope.launch {
-                TOKEN = it.access_token.toString()
-                datastore.saveToDatastore(it, requireContext())
-                activity?.finish()
-                findNavController().navigate(R.id.action_loginFragment_to_dashboardActivity)
+            override fun onFailure(call: Call<UserData?>, t: Throwable) {
+                errorMessage(t.message.toString())
             }
         })
+    }
+
+    private fun errorMessage(it: String) {
+        binding.progressBar.visibility = View.GONE
+        binding.signinBtn.isEnabled = true
+        Toast.makeText(
+            requireContext(),
+            it,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     //Check details are valid or not
@@ -166,32 +182,45 @@ class LoginFragment : Fragment(), View.OnClickListener {
         val progressBar = binding.progressBar
         helper()
         if (isValid(email, pass)) {
-            loginRepository = LoginRepository()
             progressBar.visibility = View.VISIBLE
-            loginRepository.login(email = email, pass = pass)
-
-            loginRepository.userDetails.observe(this, {
-                progressBar.visibility = View.GONE
-                TOKEN = it.access_token.toString()
-                if (it.status != 3)
-                    checkStatus(it.status!!)
-                else {
-                    datastore = Datastore(requireContext())
-                    lifecycleScope.launch {
-                        datastore.saveToDatastore(it, requireContext())
-                        activity?.finish()
-                        findNavController().navigate(R.id.action_loginFragment_to_dashboardActivity)
-                    }
-                }
-
-            })
-
-            loginRepository.errorMessage.observe(this, {
-                progressBar.visibility = View.GONE
-                binding.signinBtn.isEnabled = true
-                Toast.makeText(this.context, it, Toast.LENGTH_SHORT).show()
-            })
+            loginApi(email = email, pass = pass)
         } else binding.signinBtn.isEnabled = true
+    }
+
+    private fun loginApi(email: String, pass: String) {
+        val request = ServiceBuilder.buildService(null)
+        val call = request.login(UserData(email = email, password = pass))
+        call.enqueue(object : Callback<UserData?> {
+            override fun onResponse(call: Call<UserData?>, response: Response<UserData?>) {
+                when {
+                    response.isSuccessful -> {
+                        val responseBody = response.body()!!
+                        if (responseBody.status == -1) {
+                            errorMessage("Invalid Email Id")
+                        } else {
+                            runBlocking {
+                                datastore.saveToDatastore(responseBody, requireContext())
+                                binding.progressBar.visibility = View.GONE
+                                if (responseBody.status == 3) {
+                                    activity?.finish()
+                                    findNavController().navigate(R.id.action_loginFragment_to_dashboardActivity)
+                                } else {
+                                    responseBody.status?.let { checkStatus(it) }
+                                }
+                            }
+                        }
+                    }
+                    response.code() == 401 -> errorMessage("Wrong password")
+                    response.code() == 422 -> errorMessage("Enter correct email and password")
+                    response.code() == 404 -> errorMessage("User does not exists please signup")
+                    else -> errorMessage("User not registered")
+                }
+            }
+
+            override fun onFailure(call: Call<UserData?>, t: Throwable) {
+                errorMessage(t.message.toString())
+            }
+        })
     }
 
     private fun checkStatus(status: Int) {
@@ -201,16 +230,18 @@ class LoginFragment : Fragment(), View.OnClickListener {
                 Toast.makeText(requireContext(), "Business Details Pending", Toast.LENGTH_SHORT)
                     .show()
             }
-            -1 -> Toast.makeText(requireContext(), "Invalid Email/Password", Toast.LENGTH_SHORT)
-                .show()
             2 -> {
                 findNavController().navigate(R.id.action_loginFragment_to_sellerPhotoFragment)
-                Toast.makeText(requireContext(), "Upload seller pic pending", Toast.LENGTH_SHORT)
+                Toast.makeText(
+                    requireContext(),
+                    "Upload seller picture pending",
+                    Toast.LENGTH_SHORT
+                )
                     .show()
             }
             1 -> {
                 findNavController().navigate(R.id.action_loginFragment_to_aadharFragment)
-                Toast.makeText(requireContext(), "upload Aadhar pic", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), "Upload Aadhar picture", Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -1,13 +1,12 @@
 package com.example.acedropseller.network
 
 import com.example.acedropseller.model.*
+import com.example.acedropseller.model.dash.ShopResult
 import com.example.acedropseller.model.dash.UploadProduct
+import com.example.acedropseller.model.home.HomeItem
 import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface ApiInterface {
 
@@ -45,13 +44,51 @@ interface ApiInterface {
 
     @FormUrlEncoded
     @POST("/shop/createShopAdhaar")
-    fun uploadAadhar(@Field("images") images: Array<String>): Call<Message>
+    fun uploadAadhar(@Field("images") images: MutableList<String>): Call<Message>
 
     @FormUrlEncoded
     @POST("/shop/createShopSellerPic")
     fun uploadSellerPhoto(@Field("image") image: String): Call<Message>
 
+    @FormUrlEncoded
+    @POST("/shop/coverPic")
+    fun uploadShopPhoto(@Field("image") image: String): Call<Message>
+
     @POST("/prod/createProduct")
     fun uploadProduct(@Body uploadProduct: UploadProduct): Call<ResponseBody>
 
+    @GET("/seller/getOrders")
+    fun getOrderList():Call<List<HomeItem>>
+
+    @FormUrlEncoded
+    @POST("/seller/acceptOrder")
+    fun acceptOrder(@Field("order_itemId") order_itemId:String):Call<ResponseBody>
+
+    @FormUrlEncoded
+    @POST("/seller/rejectOrder")
+    fun rejectOrder(@Field("order_itemId") order_itemId:String):Call<ResponseBody>
+
+    @GET("/seller/getProds")
+    fun getProductList():Call<List<ProductData>>
+
+    @GET("/shop/viewOneShop/{shopId}")
+    fun getShopDetails(@Path("shopId") shopId: Int): Call<ShopResult>
+
+    @FormUrlEncoded
+    @POST("/auth/changePass")
+    fun changePass(
+        @Field("email") email: String,
+        @Field("password") oldPass: String,
+        @Field("newpass") newPass: String
+    ): Call<Message>
+
+    @FormUrlEncoded
+    @POST("/seller/updateShop")
+    fun updateShopDetails(
+        @Field("shopName") shopName: String,
+        @Field("phno") phno: String,
+        @Field("noOfMembers") noOfMembers: String,
+        @Field("description") description: String,
+        @Field("address") address: String,
+    ): Call<ResponseBody>
 }

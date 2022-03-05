@@ -9,24 +9,38 @@
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/drawable/border_curve.xml" value="0.2484375" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/drawable/circular_textview.xml" value="0.2484375" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/drawable/ic_camera.xml" value="0.2484375" />
+        <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/drawable/ic_check_circle.xml" value="0.2484375" />
+        <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/drawable/ic_placeholder.xml" value="0.2484375" />
+        <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/drawable/ic_red_tick.xml" value="0.2484375" />
+        <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/drawable/ic_splash_screen.xml" value="0.2484375" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/drawable/ic_vector__10_.xml" value="0.1" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/drawable/splash_background.xml" value="0.2484375" />
+        <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/accepted_dialog.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/activity_auth.xml" value="0.21822916666666667" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/activity_dashboard.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/activity_splash_screen.xml" value="0.21822916666666667" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/fragment_aadhar.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/fragment_business_details.xml" value="0.2" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/fragment_bussiness_details.xml" value="0.136" />
+        <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/fragment_cart.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/fragment_category.xml" value="0.23229166666666667" />
-        <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/fragment_home.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/fragment_change_password.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/fragment_home.xml" value="0.22930591259640104" />
+        <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/fragment_items.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/fragment_landing.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/fragment_login.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/fragment_otp.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/fragment_personal_details.xml" value="0.2" />
+        <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/fragment_profile.xml" value="0.5561139028475712" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/fragment_seller_photo.xml" value="0.23229166666666667" />
-        <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/fragment_signup.xml" value="0.1" />
+        <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/fragment_shop_photo.xml" value="0.2037037037037037" />
+        <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/fragment_signup.xml" value="0.264" />
+        <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/fragment_update_details.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/fragment_upload_product.xml" value="0.2" />
+        <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/home_item.xml" value="0.2" />
+        <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/product_item.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/progress_dialog.xml" value="0.23229166666666667" />
+        <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/layout/rejected_dialog.xml" value="0.23229166666666667" />
         <entry key="..\:/Users/Sandeep/AndroidStudioProjects/AcedropSeller/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.23229166666666667" />
       </map>
     </option>

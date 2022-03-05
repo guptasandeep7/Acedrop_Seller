@@ -1,8 +1,11 @@
 package com.example.acedropseller.view.auth
 
 import android.app.DatePickerDialog
+import android.app.Dialog
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,10 +16,18 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.acedropseller.R
 import com.example.acedropseller.databinding.FragmentPersonalDetailsBinding
-import com.example.acedropseller.model.BusinessDetails
+import com.example.acedropseller.model.Message
+import com.example.acedropseller.model.ShopDetails
+import com.example.acedropseller.network.ServiceBuilder
 import com.example.acedropseller.repository.Datastore
-import com.example.acedropseller.repository.auth.ShopDetailsRepository
+import com.example.acedropseller.utill.ProgressDialog
+import com.example.acedropseller.utill.generateToken
+import com.example.acedropseller.view.auth.BusinessDetailsFragment.Companion.businessDetails
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import java.util.*
 
 
@@ -29,15 +40,16 @@ class PersonalDetailsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
     private var day: Int = 0
     private var month: Int = 0
     private var year: Int = 0
-    lateinit var dob: String
-    lateinit var shopDetailsRepository: ShopDetailsRepository
+    private var dob: String? = null
+    lateinit var dialog:Dialog
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
+    ): View {
         _binding = FragmentPersonalDetailsBinding.inflate(inflater, container, false)
         val view = binding.root
+
+        dialog = ProgressDialog.progressDialog(requireContext())
 
         binding.dobBtn.setOnClickListener {
             val calendar: Calendar = Calendar.getInstance()
@@ -75,6 +87,10 @@ class PersonalDetailsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
                 binding.fatherNameLayout.helperText = "Enter Father's name"
                 false
             }
+            dob.isNullOrBlank() -> {
+                Toast.makeText(requireContext(), "Please enter date of birth", Toast.LENGTH_SHORT).show()
+                false
+            }
             else -> true
         }
     }
@@ -88,45 +104,109 @@ class PersonalDetailsFragment : Fragment(), DatePickerDialog.OnDateSetListener,
     override fun onClick(view: View?) {
         when (view?.id) {
             R.id.next_btn -> {
-                binding.progressBar.visibility = View.VISIBLE
+                dialog.show()
                 binding.nextBtn.isEnabled = false
                 val phnNumber = binding.phoneNumber.text.toString().trim()
                 val aadhaarNo = binding.aadharNumber.text.toString().trim()
                 val fName = binding.fatherName.text.toString().trim()
                 helper()
                 if (isValid(phnNumber, aadhaarNo, fName)) {
-                    val businessDetails =
-                        arguments?.getSerializable("BusinessDetails") as BusinessDetails
-                    shopDetailsRepository = ShopDetailsRepository()
-                    lifecycleScope.launch{
-                        shopDetailsRepository.createShop(
+
+                    lifecycleScope.launch {
+                        createShop(
                             businessDetails.shopName!!,
-                            phnNumber,
-                            businessDetails.member!!,
+                            phnNumber.toLong(),
+                            businessDetails.member!!.toInt(),
                             businessDetails.desc!!,
                             businessDetails.address!!,
                             fName,
                             aadhaarNo,
-                            dob,
+                            dob!!,
                             context = requireContext()
                         )
                     }
-                    shopDetailsRepository.message.observe(viewLifecycleOwner, {
-                        binding.progressBar.visibility = View.GONE
-                        findNavController().navigate(R.id.action_personalDetails_to_aadharFragment)
-                    })
-                    shopDetailsRepository.errorMessage.observe(viewLifecycleOwner, {
-                        binding.progressBar.visibility = View.GONE
-                        Toast.makeText(this.context, it, Toast.LENGTH_SHORT).show()
-                        binding.nextBtn.isEnabled = true
-                    })
                 } else {
                     binding.nextBtn.isEnabled = true
-                    binding.progressBar.visibility = View.GONE
-
+                    dialog.cancel()
                 }
             }
         }
+    }
+
+    private suspend fun createShop(
+        shopName: String,
+        phno: Long,
+        noOfMembers: Int,
+        desc: String,
+        address: String,
+        fName: String,
+        aadhaarNo: String,
+        dob: String,
+        context: Context
+    ) {
+        val token = Datastore(context).getUserDetails(Datastore.ACCESS_TOKEN_KEY)
+        Log.w("PERSONAL ACC TOKEN", "createShop: $token", )
+        val request = ServiceBuilder.buildService(token)
+        val call = request.createShop(
+            ShopDetails(
+                shopName = shopName,
+                phno = phno,
+                noOfMembers = noOfMembers,
+                description = desc,
+                address = address,
+                fathersName = fName,
+                aadhaarNo = aadhaarNo,
+                dob = dob
+            )
+        )
+        call.enqueue(object : Callback<Message?> {
+            override fun onResponse(call: Call<Message?>, response: Response<Message?>) {
+                when {
+                    response.isSuccessful -> {
+                        dialog.cancel()
+                        findNavController().navigate(R.id.action_personalDetails_to_aadharFragment)
+                    }
+                    response.code() == 404 -> errorMessage("Shop does not exists")
+
+                    response.code() == 401 -> errorMessage("Aadhar number is invalid")
+
+                    response.code() == 400 -> errorMessage("Shop already exists")
+
+                    response.code() == 403 -> {
+                        runBlocking {
+                            generateToken(
+                                token!!,
+                                Datastore(context).getUserDetails(
+                                    Datastore.REF_TOKEN_KEY
+                                )!!, context
+                            )
+                            ShopDetails(
+                                shopName = shopName,
+                                phno = phno,
+                                noOfMembers = noOfMembers,
+                                description = desc,
+                                address = address,
+                                fathersName = fName,
+                                aadhaarNo = aadhaarNo,
+                                dob = dob
+                            )
+                        }
+                    }
+                    else -> errorMessage(response.code().toString())
+                }
+            }
+
+            override fun onFailure(call: Call<Message?>, t: Throwable) {
+                errorMessage(t.message.toString())
+            }
+        })
+
+    }
+
+    fun errorMessage(errorMessage: String) {
+        dialog.cancel()
+        Toast.makeText(this.context, errorMessage, Toast.LENGTH_SHORT).show()
+        binding.nextBtn.isEnabled = true
     }
 
     override fun onDestroyView() {

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.acedropseller.model.dash.UploadProduct
+import com.example.acedropseller.model.home.ImgUrl
 import com.example.acedropseller.network.ApiResponse
 import com.example.acedropseller.repository.dash.UploadProductRepository
 import kotlinx.coroutines.launch
@@ -21,9 +22,24 @@ class UploadProductViewModel : ViewModel() {
     var discPrice: Int?=null
     var offer: String?=null
     var category: String? =null
+    var prodId: Int? = -1
+    var prevImages = mutableListOf<ImgUrl>()
 
     private var _result: MutableLiveData<ApiResponse<ResponseBody>> = MutableLiveData()
 
+    fun clearData(){
+        productName=null
+        productDesc=null
+        shortDesc=null
+        quantity=null
+        images = mutableListOf()
+        basePrice=null
+        discPrice=null
+        offer=null
+        category =null
+        prodId = -1
+        prevImages = mutableListOf()
+    }
     fun uploadProduct(context: Context): MutableLiveData<ApiResponse<ResponseBody>> {
 
         discPrice = basePrice!!.toInt() * (100 - offer!!.toInt())/100
@@ -39,7 +55,8 @@ class UploadProductViewModel : ViewModel() {
                         images = images,
                         offers = offer!!,
                         stock = quantity!!,
-                        title = productName!!.trim()
+                        title = productName!!.trim(),
+                        newProd = prodId!!
                     ),
                     context = context
                 )

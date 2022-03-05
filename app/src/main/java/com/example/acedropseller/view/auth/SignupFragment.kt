@@ -10,9 +10,14 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.example.acedropseller.R
 import com.example.acedropseller.databinding.FragmentSignupBinding
+import com.example.acedropseller.model.Message
+import com.example.acedropseller.model.UserData
+import com.example.acedropseller.network.ServiceBuilder
 import com.example.acedropseller.repository.Datastore
-import com.example.acedropseller.repository.auth.SignupRepository
 import com.example.acedropseller.utill.validPass
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class SignupFragment : Fragment(), View.OnClickListener {
     companion object {
@@ -23,13 +28,12 @@ class SignupFragment : Fragment(), View.OnClickListener {
 
     private var _binding: FragmentSignupBinding? = null
     private val binding get() = _binding!!
-    private val signupRepository = SignupRepository()
     lateinit var datastore: Datastore
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentSignupBinding.inflate(inflater, container, false)
         val view = binding.root
         datastore = Datastore(requireContext())
@@ -93,21 +97,42 @@ class SignupFragment : Fragment(), View.OnClickListener {
         helper()
         if (isValid(email, name, pass, confirmPass)) {
             progressBar.visibility = View.VISIBLE
-            signupRepository.signUp(email = email, name = name)
-            signupRepository.message.observe(this, {
-                progressBar.visibility = View.GONE
-                Email = email
-                Name = name
-                Pass = pass
-                ForgotFragment.forgot = false
-                findNavController().navigate(R.id.action_signupFragment_to_otpFragment)
-            })
-            signupRepository.errorMessage.observe(this, {
-                Toast.makeText(this.context, it, Toast.LENGTH_SHORT).show()
-                progressBar.visibility = View.GONE
-                btn.isEnabled = true
-            })
+            sendOtp(email = email, name = name)
         } else btn.isEnabled = true
+    }
+
+    private fun sendOtp(email: String, name: String) {
+        val request = ServiceBuilder.buildService(null)
+        val call = request.signup(UserData(email = email, name = name))
+        call.enqueue(object : Callback<Message?> {
+            override fun onResponse(call: Call<Message?>, response: Response<Message?>) {
+                when {
+                    response.isSuccessful -> {
+                        binding.progressBar.visibility = View.GONE
+                        Email = email
+                        Name = name
+                        Pass = binding.pass.text.toString().trim()
+                        ForgotFragment.forgot = false
+                        findNavController().navigate(R.id.action_signupFragment_to_otpFragment)
+                    }
+                    response.code() == 422 -> errorMessage("Enter Correct details")
+                    response.code() == 400 -> errorMessage("This Email is already registered")
+                    else -> errorMessage(
+                        response.body()?.message ?: "Something went wrong! Try again"
+                    )
+                }
+            }
+
+            override fun onFailure(call: Call<Message?>, t: Throwable) {
+                errorMessage(t.message.toString())
+            }
+        })
+    }
+
+    private fun errorMessage(it: String) {
+        Toast.makeText(this.context, it, Toast.LENGTH_SHORT).show()
+        binding.progressBar.visibility = View.GONE
+        binding.signupBtn.isEnabled = true
     }
 
     override fun onDestroyView() {

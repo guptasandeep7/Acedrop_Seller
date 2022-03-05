@@ -24,7 +24,7 @@
     <string name="create_password">Create Password</string>
     <string name="confirm_password">Confirm Password</string>
     <string name="confirmation_code">Confirmation Code</string>
-    <string name="didn_t_recieve_the_code_resend_now">Didn’t recieve the code? <font color="#1983FF">Resend Now</font></string>
+    <string name="didn_t_recieve_the_code_resend_now">Didn’t receive the code? <font color="#1983FF">Resend Now</font></string>
     <string name="_00_30">00:30</string>
     <string name="home">Home</string>
     <string name="category">Category</string>
@@ -49,9 +49,30 @@
     <string name="product_description">Product Description</string>
     <string name="quantity">Quantity</string>
     <string name="price">Price</string>
+    <string name="Rs">\u20B9</string>
     <string name="upload_images">Upload Images</string>
     <string name="discount_in">Discount (in %)</string>
     <string name="short_description">Short Description</string>
+    <string name="welcome_back_nice_to_see_you">Welcome back, nice to see you!</string>
+    <string name="reject">Reject</string>
+    <string name="accept">Accept</string>
+    <string name="accepted">Accepted</string>
+    <string name="rejected">Rejected</string>
+    <string name="update">Update</string>
+    <string name="your_items">Your items</string>
+    <string name="owner_full_name">Owner full name</string>
+    <string name="upload_shop_picture">Upload Shop Picture</string>
+    <string name="click_to_upload_shop_photo">Click to upload Shop photo</string>
+    <string name="owner">Owner</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="add_change_cover_image">Add/Change Cover Image</string>
+    <string name="change_password">Change Password</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="edit_details">Edit Details</string>
+    <string name="shop_default_image"><![CDATA[https://firebasestorage.googleapis.com/v0/b/acedrop-seller-1640952554752.appspot.com/o/Shop%2Fclipart1325053.png?alt=media&token=6cefe4ef-8b6b-420c-8224-361c8b97cd71]]></string>
+    <string name="orders_dispatched">Orders Dispatched</string>
+    <string name="orders_recieved">Orders Recieved</string>
+    <string name="_0">0</string>
     <string-array name="category_array">
         <item>@string/category</item>
         <item>Jewellery</item>
@@ -64,7 +85,7 @@
         <item>Customised gifts</item>
         <item>Closet and wearable</item>
         <item>Stickers and fun</item>
-        <item>DIYs</item>
+        <item>DIY\'s</item>
         <item>Makeup and accessories</item>
         <item>Others</item>
     </string-array>

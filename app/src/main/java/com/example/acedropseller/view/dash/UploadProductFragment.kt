@@ -15,11 +15,12 @@ import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
 import com.example.acedropseller.R
 import com.example.acedropseller.databinding.FragmentUploadProductBinding
+import com.example.acedropseller.model.ProductData
+import com.example.acedropseller.model.home.ImgUrl
 import com.example.acedropseller.network.ApiResponse
 import com.example.acedropseller.utill.ProgressDialog
 import com.example.acedropseller.view.auth.AuthActivity
@@ -31,7 +32,7 @@ import java.io.IOException
 class UploadProductFragment : Fragment(), View.OnClickListener {
     private var _binding: FragmentUploadProductBinding? = null
     private val binding get() = _binding!!
-    private lateinit var uploadProductViewModel: UploadProductViewModel
+    private val uploadProductViewModel: UploadProductViewModel by activityViewModels()
     private lateinit var categories: MutableList<String>
     private val IMAGE_REQUEST1 = 101
     private val IMAGE_REQUEST2 = 102
@@ -39,14 +40,17 @@ class UploadProductFragment : Fragment(), View.OnClickListener {
     private val IMAGE_REQUEST4 = 104
     private var imageUriList = arrayOfNulls<Uri>(4)
     var k = 0
-    lateinit var dialog:Dialog
+    lateinit var dialog: Dialog
+    private var lastFragment: String? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         dialog = ProgressDialog.progressDialog(requireContext())
-        uploadProductViewModel =
-            ViewModelProvider((context as FragmentActivity?)!!)[UploadProductViewModel::class.java]
+
+        if (lastFragment == null)
+            uploadProductViewModel.clearData()
+
         binding.viewmodel = uploadProductViewModel
 
         categories = resources.getStringArray(R.array.category_array).toMutableList()
@@ -74,7 +78,7 @@ class UploadProductFragment : Fragment(), View.OnClickListener {
     }
 
     private fun uploadProduct() {
-        uploadProductViewModel.uploadProduct(requireContext()).observe(viewLifecycleOwner, {
+        uploadProductViewModel.uploadProduct(requireContext()).observe(viewLifecycleOwner) {
             when (it) {
                 is ApiResponse.Success -> {
                     dialog.dismiss()
@@ -88,7 +92,11 @@ class UploadProductFragment : Fragment(), View.OnClickListener {
 
                 is ApiResponse.TokenExpire -> {
                     dialog.dismiss()
-                    Toast.makeText(requireContext(), "Refresh token false", Toast.LENGTH_SHORT)
+                    Toast.makeText(
+                        requireContext(),
+                        "Refresh Token Expire login again !!!",
+                        Toast.LENGTH_SHORT
+                    )
                         .show()
                     startActivity(Intent(activity, AuthActivity::class.java))
                 }
@@ -101,7 +109,7 @@ class UploadProductFragment : Fragment(), View.OnClickListener {
                     ).show()
                 }
             }
-        })
+        }
     }
 
     override fun onClick(v: View?) {
@@ -114,10 +122,29 @@ class UploadProductFragment : Fragment(), View.OnClickListener {
             R.id.add_product_btn -> {
                 helper()
                 if (validDetails()) {
-                    k = 0
-                    dialog.show()
-                    imageUriList = imageUriList.filterNotNull().toTypedArray()
-                    imageUriList[k]?.let { uploadImagesToFirebase(it) }
+                    if (lastFragment != null && (imageUriList.filterNotNull()
+                            .isEmpty() && uploadProductViewModel.prevImages.isNotEmpty())
+                    ) {
+                        dialog.show()
+                        uploadProductViewModel.prevImages.forEachIndexed { index, imgUrl ->
+                            uploadProductViewModel.images.add(imgUrl.imageUrl)
+                            if (index == uploadProductViewModel.prevImages.size - 1)
+                                uploadProduct()
+                        }
+                    } else {
+                        if (imageUriList.filterNotNull().isEmpty()) {
+                            Toast.makeText(
+                                requireContext(),
+                                "Please select image",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        } else {
+                            k = 0
+                            dialog.show()
+                            imageUriList = imageUriList.filterNotNull().toTypedArray()
+                            imageUriList[k]?.let { uploadImagesToFirebase(it) }
+                        }
+                    }
                 }
             }
         }
@@ -239,12 +266,6 @@ class UploadProductFragment : Fragment(), View.OnClickListener {
                     Toast.LENGTH_SHORT
                 ).show()
 
-                imageUriList.filterNotNull().isEmpty() -> Toast.makeText(
-                    requireContext(),
-                    "Please select image",
-                    Toast.LENGTH_SHORT
-                ).show()
-
                 else -> return true
             }
         }
@@ -275,6 +296,19 @@ class UploadProductFragment : Fragment(), View.OnClickListener {
         activity?.findViewById<BottomNavigationView>(R.id.bottomNavigationView)?.visibility =
             View.GONE
 
+        arguments?.let {
+            val product = it.getSerializable("ProductDetails") as ProductData
+            lastFragment = "itemFragment"
+            uploadProductViewModel.productName = product.title
+            uploadProductViewModel.productDesc = product.description
+            uploadProductViewModel.shortDesc = product.shortDescription
+            uploadProductViewModel.quantity = product.stock.toString()
+            uploadProductViewModel.basePrice = product.basePrice.toString()
+            uploadProductViewModel.discPrice = product.discountedPrice
+            uploadProductViewModel.offer = product.offers
+            uploadProductViewModel.prevImages = product.imgUrls as MutableList<ImgUrl>
+            uploadProductViewModel.prodId = product.id
+        }
     }
 
     override fun onDestroyView() {

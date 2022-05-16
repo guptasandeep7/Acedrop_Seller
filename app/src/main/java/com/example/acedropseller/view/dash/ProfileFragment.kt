@@ -121,6 +121,7 @@ class ProfileFragment : Fragment(), View.OnClickListener {
                     binding.ownerName.text = datastore.getUserDetails(NAME_KEY)
                     binding.phoneNumber.text = datastore.getUserDetails(PHN_KEY)
                     binding.email.text = datastore.getUserDetails(EMAIL_KEY)
+                    binding.address.text = datastore.getUserDetails(ADDRESS_KEY)
                     binding.coverImageButton.load(datastore.getUserDetails(IMAGE_URL)) {
                         crossfade(true)
                         placeholder(R.drawable.ic_placeholder)
@@ -148,6 +149,7 @@ class ProfileFragment : Fragment(), View.OnClickListener {
                             datastore.saveUserDetails(ADDRESS_KEY, it.data?.address)
                             datastore.saveUserDetails(NO_OF_MEMBERS, it.data?.noOfMembers.toString())
                             if (it.data?.imgUrls.isNullOrEmpty()) {
+                                uploadCoverImage(getString(R.string.shop_default_image))
                                 datastore.saveUserDetails(
                                     IMAGE_URL,
                                     getString(R.string.shop_default_image)
@@ -191,12 +193,12 @@ class ProfileFragment : Fragment(), View.OnClickListener {
                 override fun onResponse(call: Call<Message?>, response: Response<Message?>) {
                     when {
                         response.isSuccessful -> {
-                            Toast.makeText(
-                                requireContext(),
-                                "Shop photo uploaded successfully",
-                                Toast.LENGTH_SHORT
-                            )
-                                .show()
+//                            Toast.makeText(
+//                                requireContext(),
+//                                "Shop photo uploaded successfully",
+//                                Toast.LENGTH_SHORT
+//                            )
+//                                .show()
                             datastore = Datastore(requireContext())
                             lifecycleScope.launch {
                                 datastore.changeLoginState(true)

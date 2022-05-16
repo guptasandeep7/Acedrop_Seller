@@ -14,6 +14,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.core.view.setPadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.fragment.findNavController
@@ -195,6 +196,7 @@ class UploadProductFragment : Fragment(), View.OnClickListener {
                             imageUriList[0]
                         )
                         binding.uploadImageButton.setImageBitmap(bitmap)
+                        binding.uploadImageButton.setPadding(0)
                         binding.uploadImageButton.scaleType = ImageView.ScaleType.FIT_CENTER
                     }
 
@@ -205,6 +207,7 @@ class UploadProductFragment : Fragment(), View.OnClickListener {
                             imageUriList[1]
                         )
                         binding.uploadImage2Button.setImageBitmap(bitmap)
+                        binding.uploadImage2Button.setPadding(0)
                         binding.uploadImage2Button.scaleType = ImageView.ScaleType.FIT_CENTER
                     }
                     103 -> {
@@ -214,6 +217,7 @@ class UploadProductFragment : Fragment(), View.OnClickListener {
                             imageUriList[2]
                         )
                         binding.uploadImage3Button.setImageBitmap(bitmap)
+                        binding.uploadImage3Button.setPadding(0)
                         binding.uploadImage3Button.scaleType = ImageView.ScaleType.FIT_CENTER
                     }
                     104 -> {
@@ -223,6 +227,7 @@ class UploadProductFragment : Fragment(), View.OnClickListener {
                             imageUriList[3]
                         )
                         binding.uploadImage4Button.setImageBitmap(bitmap)
+                        binding.uploadImage4Button.setPadding(0)
                         binding.uploadImage4Button.scaleType = ImageView.ScaleType.FIT_CENTER
                     }
                 }

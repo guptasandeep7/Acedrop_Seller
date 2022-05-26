@@ -6,7 +6,7 @@
     app:startDestination="@id/landingFragment">
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.acedropseller.view.auth.LoginFragment"
+        android:name="com.acedrops.acedropseller.view.auth.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login">
         <action
@@ -35,7 +35,7 @@
     </fragment>
     <fragment
         android:id="@+id/signupFragment"
-        android:name="com.example.acedropseller.view.auth.SignupFragment"
+        android:name="com.acedrops.acedropseller.view.auth.SignupFragment"
         android:label="fragment_signup"
         tools:layout="@layout/fragment_signup">
         <action
@@ -49,7 +49,7 @@
     </fragment>
     <fragment
         android:id="@+id/otpFragment"
-        android:name="com.example.acedropseller.view.auth.OtpFragment"
+        android:name="com.acedrops.acedropseller.view.auth.OtpFragment"
         android:label="fragment_otp"
         tools:layout="@layout/fragment_otp" >
 
@@ -66,7 +66,7 @@
     </fragment>
     <fragment
         android:id="@+id/forgotFragment"
-        android:name="com.example.acedropseller.view.auth.ForgotFragment"
+        android:name="com.acedrops.acedropseller.view.auth.ForgotFragment"
         android:label="fragment_forgot"
         tools:layout="@layout/fragment_forgot" >
         <action
@@ -75,12 +75,12 @@
     </fragment>
     <activity
         android:id="@+id/dashboardActivity"
-        android:name="com.example.acedropseller.view.dash.DashboardActivity"
+        android:name="com.acedrops.acedropseller.view.dash.DashboardActivity"
         android:label="activity_dashboard"
         tools:layout="@layout/activity_dashboard" />
     <fragment
         android:id="@+id/passwordFragment"
-        android:name="com.example.acedropseller.view.auth.PasswordFragment"
+        android:name="com.acedrops.acedropseller.view.auth.PasswordFragment"
         android:label="PasswordFragment"
         tools:layout="@layout/fragment_password">
         <action
@@ -91,7 +91,7 @@
     </fragment>
     <fragment
         android:id="@+id/landingFragment"
-        android:name="com.example.acedropseller.view.auth.LandingFragment"
+        android:name="com.acedrops.acedropseller.view.auth.LandingFragment"
         android:label="fragment_landing"
         tools:layout="@layout/fragment_landing" >
         <action
@@ -108,7 +108,7 @@
     </fragment>
     <fragment
         android:id="@+id/businessDetailsFragment"
-        android:name="com.example.acedropseller.view.auth.BusinessDetailsFragment"
+        android:name="com.acedrops.acedropseller.view.auth.BusinessDetailsFragment"
         android:label="BusinessDetailsFragment"
         tools:layout="@layout/fragment_business_details">
         <action
@@ -117,7 +117,7 @@
     </fragment>
     <fragment
         android:id="@+id/personalDetails"
-        android:name="com.example.acedropseller.view.auth.PersonalDetailsFragment"
+        android:name="com.acedrops.acedropseller.view.auth.PersonalDetailsFragment"
         android:label="PersonalDetails"
         tools:layout="@layout/fragment_personal_details">
         <action
@@ -126,7 +126,7 @@
     </fragment>
     <fragment
         android:id="@+id/aadharFragment"
-        android:name="com.example.acedropseller.view.auth.AadharFragment"
+        android:name="com.acedrops.acedropseller.view.auth.AadharFragment"
         android:label="AadharFragment"
         tools:layout="@layout/fragment_aadhar">
         <action
@@ -135,7 +135,7 @@
     </fragment>
     <fragment
         android:id="@+id/sellerPhotoFragment"
-        android:name="com.example.acedropseller.view.auth.SellerPhotoFragment"
+        android:name="com.acedrops.acedropseller.view.auth.SellerPhotoFragment"
         android:label="fragment_seller_photo"
         tools:layout="@layout/fragment_seller_photo" >
         <action
@@ -147,7 +147,7 @@
     </fragment>
     <fragment
         android:id="@+id/shopPhotoFragment"
-        android:name="com.example.acedropseller.view.auth.ShopPhotoFragment"
+        android:name="com.acedrops.acedropseller.view.auth.ShopPhotoFragment"
         android:label="ShopPhotoFragment"
         tools:layout="@layout/fragment_shop_photo">
         <action

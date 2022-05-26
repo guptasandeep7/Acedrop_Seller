@@ -1,15 +1,15 @@
 <resources>
-    <string name="app_name">Acedrop Seller</string>
+    <string name="app_name">Acedrops Seller</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="password">Password</string>
-    <string name="terms_and_conditions">By continuing you agree to the AceDrop’s\n<font color="#1983FF">Terms and Conditions</font></string>
+    <string name="terms_and_conditions">By continuing you agree to the Acedrops\n<font color="#1983FF">Terms and Conditions</font></string>
     <string name="sign_in">Sign in</string>
     <string name="sign_up">Sign up</string>
     <string name="full_name">Full Name</string>
     <string name="new_here_sign_up">New here? <font color="#1983FF">Sign up</font></string>
     <string name="password_assistance">Password Assistance</string>
-    <string name="enter_acedrop_account">Enter your phone number or email account associated with you AceDrop account</string>
+    <string name="enter_acedrop_account">Enter your phone number or email account associated with you Acedrops account</string>
     <string name="next">Next</string>
     <string name="create_your_account">Create your account</string>
     <string name="phone_number">Phone Number</string>
@@ -32,8 +32,8 @@
     <string name="profile">Profile</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
-    <string name="acedrop_seller">Acedrop Seller</string>
-    <string name="server_client_id">268564059113-4tes04r0sej5c1e1ukpmgv3o8em0n805.apps.googleusercontent.com</string>
+    <string name="acedrop_seller">Acedrops Seller</string>
+    <string name="server_client_id">407572651531-a4uju2hb6p5dpn40vvgat1nlas8m9b9v.apps.googleusercontent.com</string>
     <string name="business_details">Business\nDetails</string>
     <string name="personal_details">Personal\nDetails</string>
     <string name="upload_seller_picture">Upload Seller\nIdentity</string>
@@ -71,7 +71,7 @@
     <string name="edit_details">Edit Details</string>
     <string name="shop_default_image"><![CDATA[https://firebasestorage.googleapis.com/v0/b/acedrop-seller-1640952554752.appspot.com/o/Shop%2Fclipart1325053.png?alt=media&token=6cefe4ef-8b6b-420c-8224-361c8b97cd71]]></string>
     <string name="orders_dispatched">Orders Dispatched</string>
-    <string name="orders_recieved">Orders Recieved</string>
+    <string name="orders_recieved">Orders Received</string>
     <string name="_0">0</string>
     <string-array name="category_array">
         <item>@string/category</item>

@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewmodel"
-            type="com.example.acedropseller.viewmodel.UploadProductViewModel" />
+            type="com.acedrops.acedropseller.viewmodel.UploadProductViewModel" />
     </data>
 
     <LinearLayout

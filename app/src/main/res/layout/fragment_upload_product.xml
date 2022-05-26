@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewmodel"
-            type="com.example.acedropseller.viewmodel.UploadProductViewModel" />
+            type="com.acedrops.acedropseller.viewmodel.UploadProductViewModel" />
     </data>
 
     <LinearLayout
@@ -64,13 +64,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="22dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="36dp"
                     android:layout_marginEnd="16dp"
                     android:text="@string/enter_product_details"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@+id/upload_image4_Button" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/product_name_layout"
@@ -267,25 +267,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="22dp"
-                    android:layout_marginTop="24dp"
                     android:layout_marginEnd="16dp"
                     android:text="@string/upload_images"
                     android:textSize="16sp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/offer_layout" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageButton
                     android:id="@+id/upload_image_Button"
                     android:layout_width="0dp"
                     android:layout_height="200dp"
+                    android:padding="56dp"
                     android:layout_marginStart="22dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginEnd="22dp"
+                    android:layout_marginEnd="11dp"
                     android:background="@drawable/border"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_camera"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline2"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textview2" />
 
@@ -293,27 +293,29 @@
                     android:id="@+id/upload_image2_Button"
                     android:layout_width="0dp"
                     android:layout_height="200dp"
-                    android:layout_marginStart="22dp"
+                    android:padding="56dp"
+                    android:layout_marginStart="11dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="22dp"
                     android:background="@drawable/border"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_camera"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/upload_image_Button" />
+                    app:layout_constraintStart_toStartOf="@+id/guideline2"
+                    app:layout_constraintTop_toBottomOf="@+id/textview2" />
 
                 <ImageButton
                     android:id="@+id/upload_image3_Button"
                     android:layout_width="0dp"
                     android:layout_height="200dp"
+                    android:padding="56dp"
                     android:layout_marginStart="22dp"
                     android:layout_marginTop="16dp"
-                    android:layout_marginEnd="22dp"
+                    android:layout_marginEnd="11dp"
                     android:background="@drawable/border"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_camera"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline2"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/upload_image2_Button" />
 
@@ -321,30 +323,40 @@
                     android:id="@+id/upload_image4_Button"
                     android:layout_width="0dp"
                     android:layout_height="200dp"
-                    android:layout_marginStart="22dp"
+                    android:padding="56dp"
+                    android:layout_marginStart="11dp"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="22dp"
                     android:background="@drawable/border"
                     android:scaleType="fitCenter"
                     android:src="@drawable/ic_camera"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/upload_image3_Button" />
+                    app:layout_constraintStart_toStartOf="@+id/guideline2"
+                    app:layout_constraintTop_toBottomOf="@+id/upload_image2_Button" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/add_product_btn"
                     android:layout_width="0dp"
                     android:layout_height="65dp"
                     android:layout_marginStart="22dp"
-                    android:layout_marginTop="28dp"
+                    android:layout_marginTop="24dp"
                     android:layout_marginEnd="22dp"
+                    android:layout_marginBottom="16dp"
                     android:text="@string/add_product"
                     android:textAllCaps="false"
                     app:cornerRadius="30dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/upload_image4_Button" />
+                    app:layout_constraintTop_toBottomOf="@+id/offer_layout" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.5"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>

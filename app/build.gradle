@@ -7,16 +7,25 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        release {
+            storeFile file('C:\\Users\\Sandeep\\OneDrive\\Desktop\\Acedrops Key\\Acedrops Seller\\Acedrops Seller Key.jks')
+            storePassword 'acedropsvishal'
+            keyAlias 'Acedrops Seller Key'
+            keyPassword 'acedropsvishal'
+        }
+    }
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.example.acedropseller"
+        applicationId "com.acedrops.acedropseller"
         minSdk 21
         targetSdk 31
         versionCode 1
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.release
     }
 
     buildTypes {
@@ -44,16 +53,16 @@ dependencies {
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'com.google.android.material:material:1.6.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'com.google.firebase:firebase-database-ktx:20.0.3'
-    implementation 'com.google.firebase:firebase-storage-ktx:20.0.0'
+    implementation 'com.google.firebase:firebase-database-ktx:20.0.5'
+    implementation 'com.google.firebase:firebase-storage-ktx:20.0.1'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     def lifecycle_version = "2.4.1"
-    def nav_version = "2.4.1"
+    def nav_version = "2.4.2"
     // ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
     // LiveData
@@ -75,7 +84,7 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.2'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2'
     //Google one tap
-    implementation 'com.google.android.gms:play-services-auth:20.1.0'
+    implementation 'com.google.android.gms:play-services-auth:20.2.0'
     //firebase
     implementation platform('com.google.firebase:firebase-bom:29.0.3')
     implementation 'com.google.firebase:firebase-analytics-ktx'

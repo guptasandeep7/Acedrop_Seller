@@ -7,12 +7,57 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:407572651531:android:608c26ffc0b0148536b10e",
+        "android_client_info": {
+          "package_name": "com.acedrops.acedropsseller"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "407572651531-u7jo1ips7v3raf6uo1h4ho1lomeonvlv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.acedrops.acedropsseller",
+            "certificate_hash": "a19d74c9a20e480642bf96db64b0a09253b57d1a"
+          }
+        },
+        {
+          "client_id": "407572651531-1q8532la2fnmq2a0lf4mvimrtlfo0ptq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDk-Kc8eflJ8cg4bt_FCYEYIs5Mq9HQNs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "407572651531-1q8532la2fnmq2a0lf4mvimrtlfo0ptq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:407572651531:android:0a355f3013529c3936b10e",
         "android_client_info": {
           "package_name": "com.example.acedropseller"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "407572651531-2mrnjo6b9pgpl833q18tut5af9eg9mgv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.acedropseller",
+            "certificate_hash": "a19d74c9a20e480642bf96db64b0a09253b57d1a"
+          }
+        },
         {
           "client_id": "407572651531-ep4uqc5u0h286kj8cstbte8vndv0ckf5.apps.googleusercontent.com",
           "client_type": 1,

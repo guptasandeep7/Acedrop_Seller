@@ -6,7 +6,7 @@
     <data>
         <variable
             name="homeItem"
-            type="com.example.acedropseller.model.home.HomeItem" />
+            type="com.acedrops.acedropseller.model.home.HomeItem" />
     </data>
 
     <androidx.cardview.widget.CardView
